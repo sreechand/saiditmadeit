@@ -221,8 +221,8 @@ router.post<{}, GeneratePuzzleResponse | { status: string; message: string }, Ge
         theme: puzzle.theme,
         difficulty: {
           level: difficulty,
-          showWords: difficulty === 'easy',
-          showWordBlanks: difficulty === 'medium',
+          showWords: false,
+          showWordBlanks: false,
           snakeSpeed: difficulty === 'hard' ? 4 : difficulty === 'medium' ? 3 : 2,
           allowSharedLetters: false
         }

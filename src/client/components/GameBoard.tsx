@@ -122,40 +122,37 @@ const LetterCellComponent: React.FC<LetterCellComponentProps> = ({
     return cell.letter.toUpperCase();
   };
 
-  // Base cell styling with smooth transitions
-  let cellClasses = 'w-full h-full flex items-center justify-center text-lg font-bold border transition-smooth cursor-pointer select-none relative overflow-hidden';
-  
+  // Base cell styling with smooth transitions - START WITH WHITE FOR EVERYONE
+  let cellClasses = 'w-full h-full flex items-center justify-center text-lg font-bold border border-gray-400 bg-white text-black transition-smooth cursor-pointer select-none relative overflow-hidden';
+
   // Add collection animation
   if (isCollecting) {
     cellClasses += ' animate-letter-collect';
   }
-  
+
   // Snake segment styling with enhanced animations
   if (isSnakeCell) {
+    // Override white with snake colors
     if (isSnakeHead) {
-      cellClasses += ' bg-blue-600 text-white border-blue-700 shadow-lg z-20';
+      cellClasses = cellClasses.replace('bg-white text-black', 'bg-blue-600 text-white border-blue-700 shadow-lg z-20');
       if (isAnimating) {
         cellClasses += ' animate-snake-slither';
       }
     } else if (segmentType === 'correct') {
-      cellClasses += ' bg-green-500 text-white border-green-600 animate-snake-grow';
+      cellClasses = cellClasses.replace('bg-white text-black', 'bg-green-500 text-white border-green-600');
+      cellClasses += ' animate-snake-grow';
     } else if (segmentType === 'wrong') {
-      cellClasses += ' bg-red-500 text-white border-red-600 animate-wrong-letter-shake';
+      cellClasses = cellClasses.replace('bg-white text-black', 'bg-red-500 text-white border-red-600');
+      cellClasses += ' animate-wrong-letter-shake';
     }
-  } else {
-    // Regular cell styling with theme colors
-    if (wordStatus === 'valid') {
-      cellClasses += ' bg-green-200 text-gray-800 border-green-400';
-    } else if (wordStatus === 'invalid') {
-      cellClasses += ' bg-red-200 text-gray-800 border-red-400';
-    } else if (cell.isCollected) {
-      cellClasses += ` bg-yellow-200 text-gray-700 border-yellow-400 opacity-60`;
-    } else if (cell.isPartOfWord) {
-      cellClasses += ` ${themeColors.secondary} text-gray-800 ${themeColors.border} ${themeColors.hover}`;
-    } else {
-      cellClasses += ' bg-white text-gray-700 border-gray-300 hover:bg-gray-50';
-    }
+  } else if (wordStatus === 'valid') {
+    // Only color non-snake cells that have been collected
+    cellClasses = cellClasses.replace('bg-white text-black', 'bg-green-200 text-gray-800 border-green-400');
+  } else if (wordStatus === 'invalid') {
+    // Only color non-snake cells that have been collected
+    cellClasses = cellClasses.replace('bg-white text-black', 'bg-red-200 text-gray-800 border-red-400');
   }
+  // All other cells remain white (no additional changes)
   
   return (
     <div 
@@ -214,18 +211,25 @@ export const GameBoard: React.FC<GameBoardProps> = ({
   });
 
   // Create a map of word status for each position
+  // Only show color for letters that are part of the snake (collected)
   const wordStatusMap = new Map<string, 'valid' | 'invalid'>();
   const allWords = [...targetWords, ...distractorWords];
+  const snakePositions = new Set(snake.map(s => `${s.position.x},${s.position.y}`));
 
   allWords.forEach(word => {
-    if (word.isCollected) {
-      const status = word.isTarget ? 'valid' : 'invalid';
-      word.positions.forEach(pos => {
-        const key = `${pos.x},${pos.y}`;
+    const status = word.isTarget ? 'valid' : 'invalid';
+    word.positions.forEach(pos => {
+      const key = `${pos.x},${pos.y}`;
+      // Only set color if this position is occupied by the snake
+      if (snakePositions.has(key)) {
         wordStatusMap.set(key, status);
-      });
-    }
+      }
+    });
   });
+
+  console.log('GameBoard wordStatusMap:', wordStatusMap.size, 'entries');
+  console.log('Snake positions:', Array.from(snakePositions));
+  console.log('All word positions:', allWords.flatMap(w => w.positions));
 
   const handleCellClick = (x: number, y: number) => {
     onCellClick?.(x, y);
@@ -263,9 +267,9 @@ export const GameBoard: React.FC<GameBoardProps> = ({
     <div className={`game-board relative ${className}`}>
       {/* Game board container with responsive sizing and theme styling */}
       <div className="w-full max-w-md mx-auto aspect-square p-2">
-        <div 
-          className={`grid gap-1 w-full h-full p-2 rounded-lg shadow-lg border-2 transition-smooth ${getThemeBoardStyle()} ${boardAnimation}`}
-          style={{ 
+        <div
+          className={`grid gap-1 w-full h-full p-2 rounded-lg shadow-lg border-2 transition-smooth bg-white border-gray-400 ${boardAnimation}`}
+          style={{
             gridTemplateColumns: `repeat(${GAME_CONFIG.GRID_SIZE}, 1fr)`,
             gridTemplateRows: `repeat(${GAME_CONFIG.GRID_SIZE}, 1fr)`
           }}

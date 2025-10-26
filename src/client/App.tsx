@@ -35,30 +35,37 @@ export const App = () => {
   } = useAnimations();
   
   // Handle game initialization
-  const handleStartGame = () => {
+  const handleStartGame = async () => {
     setGameStarted(true);
-    // Initialize with default settings - this will be replaced with actual puzzle generation
-    const mockPuzzle = {
-      grid: Array(GAME_CONFIG.GRID_SIZE).fill(null).map((_, y) =>
-        Array(GAME_CONFIG.GRID_SIZE).fill(null).map((_, x) => ({
-          letter: String.fromCharCode(65 + Math.floor(Math.random() * 26)),
-          position: { x, y },
-          isPartOfWord: false,
-          isCollected: false
-        }))
-      ),
-      targetWords: [],
-      distractorWords: [],
-      theme: { name: 'Animals', category: 'Animals', targetWords: [], distractorWords: [] },
-      difficulty: { 
-        level: 'easy' as const, 
-        showWords: true, 
-        showWordBlanks: false, 
-        snakeSpeed: 2, 
-        allowSharedLetters: true 
+    try {
+      // Call the API to generate a real puzzle
+      const response = await fetch('/api/generate-puzzle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          theme: 'Animals',
+          difficulty: 'easy'
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to generate puzzle: ${response.status}`);
       }
-    };
-    initializeGame(mockPuzzle);
+
+      const puzzleData = await response.json();
+      console.log('Generated puzzle:', puzzleData);
+
+      initializeGame({
+        grid: puzzleData.grid,
+        targetWords: puzzleData.targetWords,
+        distractorWords: puzzleData.distractorWords,
+        theme: puzzleData.theme,
+        difficulty: puzzleData.difficulty
+      });
+    } catch (error) {
+      console.error('Failed to start game:', error);
+      setGameStarted(false);
+    }
   };
   
   // Game control handlers
@@ -198,20 +205,17 @@ export const App = () => {
       onClick={() => document.querySelector<HTMLDivElement>('.min-h-screen')?.focus()}
     >
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Left sidebar - Word tracker and stats */}
-          <div className="lg:col-span-1 space-y-4">
-            <WordTracker
-              targetWords={gameState.targetWords}
-              collectedWords={gameState.collectedWords}
-              wrongLetterCount={gameState.wrongLetterCount}
-              difficulty={gameState.difficulty}
-              currentTheme={gameState.currentTheme?.name}
-            />
+        {/* Target Words Counter */}
+        <div className="text-center mb-4">
+          <div className="text-sm text-gray-600">Target Words Found</div>
+          <div className="text-3xl font-bold text-blue-600">
+            {gameState.targetWords.filter(w => w.isCollected).length}/{gameState.targetWords.length}
           </div>
-          
-          {/* Center - Game board */}
-          <div className="lg:col-span-1 flex flex-col items-center space-y-4">
+        </div>
+
+        <div className="flex justify-center">
+          {/* Game board - centered */}
+          <div className="flex flex-col items-center space-y-4">
             <div className="relative">
               <GameBoard
                 grid={gameState.grid}
@@ -234,22 +238,22 @@ export const App = () => {
               />
             </div>
           </div>
-          
-          {/* Right sidebar - Game controls */}
-          <div className="lg:col-span-1 space-y-4">
-            <GameControls
-              onMove={handleMove}
-              onPause={pauseGame}
-              onResume={resumeGame}
-              onRestart={resetGame}
-              onDifficultyChange={handleDifficultyChange}
-              onThemeChange={handleThemeChange}
-              isPaused={gameState.gameStatus === 'paused'}
-              isGameActive={gameState.gameStatus === 'playing' || gameState.gameStatus === 'paused'}
-              currentDifficulty={gameState.difficulty.level}
-              currentTheme={gameState.currentTheme?.name as ThemeName || 'Animals'}
-            />
-          </div>
+        </div>
+
+        {/* Game controls below the grid */}
+        <div className="flex justify-center mt-4">
+          <GameControls
+            onMove={handleMove}
+            onPause={pauseGame}
+            onResume={resumeGame}
+            onRestart={resetGame}
+            onDifficultyChange={handleDifficultyChange}
+            onThemeChange={handleThemeChange}
+            isPaused={gameState.gameStatus === 'paused'}
+            isGameActive={gameState.gameStatus === 'playing' || gameState.gameStatus === 'paused'}
+            currentDifficulty={gameState.difficulty.level}
+            currentTheme={gameState.currentTheme?.name as ThemeName || 'Animals'}
+          />
         </div>
       </div>
 
