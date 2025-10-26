@@ -222,25 +222,65 @@ const GameMenu: React.FC<GameMenuProps> = ({
         {/* Difficulty Selection */}
         <div className="mb-6">
           <h3 className="text-sm font-semibold text-gray-700 mb-2">Difficulty Level</h3>
-          <div className="space-y-2">
-            {(['easy', 'medium', 'hard'] as const).map(level => (
-              <label key={level} className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="difficulty"
-                  value={level}
-                  checked={currentDifficulty === level}
-                  onChange={() => onDifficultyChange(level)}
-                  className="text-blue-600"
-                />
-                <span className="capitalize text-gray-700">{level}</span>
-                <span className="text-xs text-gray-500">
-                  {level === 'easy' && '(Words visible)'}
-                  {level === 'medium' && '(Word blanks shown)'}
-                  {level === 'hard' && '(No hints)'}
-                </span>
-              </label>
-            ))}
+          <div className="space-y-3">
+            {(['easy', 'medium', 'hard'] as const).map(level => {
+              const getDifficultyInfo = (level: 'easy' | 'medium' | 'hard') => {
+                switch (level) {
+                  case 'easy':
+                    return {
+                      description: 'Words visible, slow snake',
+                      color: 'text-green-600',
+                      bgColor: 'bg-green-50 border-green-200'
+                    };
+                  case 'medium':
+                    return {
+                      description: 'Word blanks, medium snake',
+                      color: 'text-yellow-600',
+                      bgColor: 'bg-yellow-50 border-yellow-200'
+                    };
+                  case 'hard':
+                    return {
+                      description: 'No hints, fast snake',
+                      color: 'text-red-600',
+                      bgColor: 'bg-red-50 border-red-200'
+                    };
+                }
+              };
+              
+              const info = getDifficultyInfo(level);
+              const isSelected = currentDifficulty === level;
+              
+              return (
+                <div
+                  key={level}
+                  className={`border rounded-lg p-3 cursor-pointer transition-all ${
+                    isSelected 
+                      ? `${info.bgColor} border-2` 
+                      : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+                  }`}
+                  onClick={() => onDifficultyChange(level)}
+                >
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="difficulty"
+                      value={level}
+                      checked={isSelected}
+                      onChange={() => onDifficultyChange(level)}
+                      className="text-blue-600"
+                    />
+                    <div className="flex-1">
+                      <div className={`font-medium capitalize ${isSelected ? info.color : 'text-gray-700'}`}>
+                        {level}
+                      </div>
+                      <div className="text-xs text-gray-600">
+                        {info.description}
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              );
+            })}
           </div>
         </div>
         

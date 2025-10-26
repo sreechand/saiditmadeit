@@ -42,6 +42,7 @@ const createInitialGameState = (): GameState => ({
   score: 0,
   wrongLetterCount: 0,
   startTime: Date.now(),
+  totalPausedTime: 0,
   showVictoryScreen: false,
   isPaused: false
 });
@@ -64,6 +65,7 @@ function gameStateReducer(state: GameState, action: GameAction): GameState {
         collectedWords: [],
         showVictoryScreen: false,
         isPaused: false,
+        totalPausedTime: 0,
         snake: [{
           position: { x: 0, y: 0 },
           isHead: true,
@@ -155,12 +157,30 @@ function gameStateReducer(state: GameState, action: GameAction): GameState {
     case 'CHECK_VICTORY':
       const allTargetWordsCollected = state.targetWords.every(word => word.isCollected);
       
-      if (allTargetWordsCollected) {
+      if (allTargetWordsCollected && state.gameStatus === 'playing') {
+        const endTime = Date.now();
+        const gameTime = endTime - state.startTime - (state.totalPausedTime || 0);
+        
+        // Calculate final score with bonuses
+        let finalScore = state.score;
+        
+        // Time bonus (faster completion = higher bonus)
+        const timeInSeconds = gameTime / 1000;
+        const maxTimeBonus = 200;
+        const timeBonus = Math.max(0, maxTimeBonus - Math.floor(timeInSeconds * 0.1));
+        
+        // Efficiency bonus (fewer wrong letters = higher bonus)
+        const maxEfficiencyBonus = 100;
+        const efficiencyBonus = Math.max(0, maxEfficiencyBonus - (state.wrongLetterCount * 10));
+        
+        finalScore += timeBonus + efficiencyBonus;
+        
         return {
           ...state,
           gameStatus: 'won',
           showVictoryScreen: true,
-          endTime: Date.now()
+          endTime,
+          score: finalScore
         };
       }
       
@@ -170,14 +190,19 @@ function gameStateReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         isPaused: true,
-        gameStatus: 'paused'
+        gameStatus: 'paused',
+        pausedAt: Date.now()
       };
 
     case 'RESUME':
+      const resumeTime = Date.now();
+      const pauseDuration = state.pausedAt ? resumeTime - state.pausedAt : 0;
+      
       return {
         ...state,
         isPaused: false,
-        gameStatus: 'playing'
+        gameStatus: 'playing',
+        totalPausedTime: (state.totalPausedTime || 0) + pauseDuration
       };
 
     case 'RESET':

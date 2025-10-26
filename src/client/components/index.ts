@@ -3,6 +3,7 @@ export { GameBoard } from './GameBoard';
 export { Snake, SnakeStatus } from './Snake';
 export { WordTracker, WordProgress, GameStats, CurrentWordFormation } from './WordTracker';
 export { GameControls } from './GameControls';
+export { VictoryScreen } from './VictoryScreen';
 
 // Re-export default components
 export { default as GameBoardDefault } from './GameBoard';

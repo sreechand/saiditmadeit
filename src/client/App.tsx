@@ -3,7 +3,9 @@ import { navigateTo } from '@devvit/web/client';
 import { useGameState } from './hooks/useGameState';
 import { useSnake } from './hooks/useSnake';
 import { useWordCollection } from './hooks/useWordCollection';
-import { GameBoard, Snake, WordTracker, GameControls } from './components';
+import { useVictorySystem } from './hooks/useVictorySystem';
+import { useDifficulty } from './hooks/useDifficulty';
+import { GameBoard, Snake, WordTracker, GameControls, VictoryScreen } from './components';
 import { GAME_CONFIG, DifficultySettings, ThemeName } from '../shared/types/game';
 
 export const App = () => {
@@ -12,6 +14,16 @@ export const App = () => {
   // Game state hooks
   const { gameState, initializeGame, pauseGame, resumeGame, resetGame } = useGameState();
   const { changeDirection } = useSnake();
+  const { 
+    showVictoryScreen, 
+    playAgain, 
+    playWithNewTheme, 
+    closeVictoryScreen 
+  } = useVictorySystem();
+  const { 
+    changeDifficulty, 
+    canChangeDifficulty
+  } = useDifficulty();
   useWordCollection();
   
   // Handle game initialization
@@ -49,9 +61,15 @@ export const App = () => {
     }
   };
   
-  const handleDifficultyChange = (difficulty: DifficultySettings['level']) => {
-    // This will be implemented when we have puzzle generation
-    console.log('Difficulty changed to:', difficulty);
+  const handleDifficultyChange = async (difficulty: DifficultySettings['level']) => {
+    if (canChangeDifficulty) {
+      const success = await changeDifficulty(difficulty, true);
+      if (!success) {
+        console.error('Failed to change difficulty to:', difficulty);
+      }
+    } else {
+      console.warn('Cannot change difficulty during active gameplay');
+    }
   };
   
   const handleThemeChange = (theme: ThemeName) => {
@@ -148,6 +166,16 @@ export const App = () => {
           </div>
         </div>
       </div>
+
+      {/* Victory Screen Overlay */}
+      {showVictoryScreen && (
+        <VictoryScreen
+          gameState={gameState}
+          onPlayAgain={playAgain}
+          onThemeSelect={playWithNewTheme}
+          onClose={closeVictoryScreen}
+        />
+      )}
     </div>
   );
 };

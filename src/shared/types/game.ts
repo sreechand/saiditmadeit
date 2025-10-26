@@ -86,6 +86,10 @@ export interface GameState {
   startTime: number;
   endTime?: number;
   
+  // Timing state
+  pausedAt?: number;
+  totalPausedTime?: number;
+  
   // UI state
   showVictoryScreen: boolean;
   isPaused: boolean;

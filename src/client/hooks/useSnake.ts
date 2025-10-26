@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import type { 
   Position, 
-  SnakeSegment, 
-  LetterCell,
-  GameState
+  SnakeSegment
 } from '../../shared/types/game.js';
 import { 
   getNextPosition, 
@@ -16,8 +14,9 @@ import { useGameState } from './useGameState.js';
 
 export const useSnake = () => {
   const { gameState, dispatch } = useGameState();
-  const movementTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const movementTimerRef = useRef<number | null>(null);
   const lastMoveTimeRef = useRef<number>(0);
+  const accumulatedTimeRef = useRef<number>(0);
 
   // Calculate movement interval based on snake speed
   const getMovementInterval = useCallback(() => {
@@ -94,7 +93,7 @@ export const useSnake = () => {
       },
       // Convert old head to body segment with appropriate type
       {
-        ...currentSnake[0],
+        position: currentSnake[0].position,
         isHead: false,
         segmentType: segmentType
       },
@@ -105,54 +104,66 @@ export const useSnake = () => {
     return newSnake;
   }, [gameState.snake]);
 
-  // Start automatic movement
+  // Frame-rate independent movement system
   const startMovement = useCallback(() => {
     if (movementTimerRef.current) {
-      clearInterval(movementTimerRef.current);
+      cancelAnimationFrame(movementTimerRef.current);
     }
 
     const moveInterval = getMovementInterval();
+    lastMoveTimeRef.current = performance.now();
+    accumulatedTimeRef.current = 0;
     
-    movementTimerRef.current = setInterval(() => {
-      const now = Date.now();
+    const gameLoop = (currentTime: number) => {
+      // Calculate delta time since last frame
+      const deltaTime = currentTime - lastMoveTimeRef.current;
+      lastMoveTimeRef.current = currentTime;
       
-      // Throttle movement to prevent too rapid updates
-      if (now - lastMoveTimeRef.current < moveInterval) {
-        return;
-      }
-      
-      lastMoveTimeRef.current = now;
-
       // Don't move if game is paused, stopped, or not playing
       if (gameState.gameStatus !== 'playing' || 
           gameState.isPaused || 
           gameState.isSnakeStopped) {
+        // Continue the loop but don't process movement
+        movementTimerRef.current = requestAnimationFrame(gameLoop);
         return;
       }
 
-      const currentHead = gameState.snake[0];
-      if (!currentHead) {
-        return;
+      // Accumulate time for frame-rate independent movement
+      accumulatedTimeRef.current += deltaTime;
+      
+      // Check if enough time has passed for a movement
+      if (accumulatedTimeRef.current >= moveInterval) {
+        accumulatedTimeRef.current -= moveInterval;
+        
+        const currentHead = gameState.snake[0];
+        if (currentHead) {
+          const nextPosition = getNextPosition(currentHead.position, gameState.snakeDirection);
+          
+          // Attempt to move snake
+          const moveSuccessful = moveSnakeToPosition(nextPosition);
+          
+          if (!moveSuccessful) {
+            // Handle collision or boundary hit
+            stopMovement();
+            return;
+          }
+        }
       }
 
-      const nextPosition = getNextPosition(currentHead.position, gameState.snakeDirection);
-      
-      // Attempt to move snake
-      const moveSuccessful = moveSnakeToPosition(nextPosition);
-      
-      if (!moveSuccessful) {
-        // Handle collision or boundary hit
-        stopMovement();
-      }
-    }, Math.min(moveInterval, 100)); // Cap at 100ms for responsiveness
+      // Continue the game loop
+      movementTimerRef.current = requestAnimationFrame(gameLoop);
+    };
+
+    movementTimerRef.current = requestAnimationFrame(gameLoop);
   }, [gameState, getMovementInterval, moveSnakeToPosition]);
 
   // Stop automatic movement
   const stopMovement = useCallback(() => {
     if (movementTimerRef.current) {
-      clearInterval(movementTimerRef.current);
+      cancelAnimationFrame(movementTimerRef.current);
       movementTimerRef.current = null;
     }
+    accumulatedTimeRef.current = 0;
   }, []);
 
   // Continue movement after collecting a letter

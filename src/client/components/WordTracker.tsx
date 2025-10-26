@@ -32,10 +32,10 @@ const WordProgress: React.FC<WordProgressProps> = ({
       return word.text.toUpperCase();
     } else if (difficulty.showWordBlanks) {
       // Medium mode: show blanks with letter count
-      return `${'_'.repeat(word.text.length)} (${word.text.length})`;
+      return `${'_'.repeat(word.text.length)} (${word.text.length} letters)`;
     } else {
-      // Hard mode: show only word number
-      return `Word ${word.id}`;
+      // Hard mode: show only generic placeholder
+      return `??? (${word.text.length})`;
     }
   };
   
