@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import type { Position, SnakeSegment, Word } from '../../shared/types/game.js';
+import type { Position, SnakeSegment } from '../../shared/types/game.js';
 import { getNextPosition, isValidPosition, positionsEqual } from '../../shared/utils/gameUtils.js';
 import { useGameState } from './useGameState.js';
 
@@ -19,6 +19,11 @@ export const useSnake = () => {
     }
 
     const currentHead = currentSnake[0];
+    if (!currentHead) {
+      console.log('No snake head found');
+      return;
+    }
+
     const nextPosition = getNextPosition(currentHead.position, direction);
 
     console.log('moveSnake:', direction, 'from', currentHead.position, 'to', nextPosition);
@@ -90,15 +95,26 @@ export const useSnake = () => {
       );
 
       if (isWordComplete && !word.isCollected) {
-        console.log('Word found:', word.text);
+        console.log('Word completed:', word.text, 'isTarget:', word.isTarget);
         // Mark the word as collected
         const updatedWord = { ...word, isCollected: true };
+
+        // Update the word in the appropriate list
+        dispatch({
+          type: 'COLLECT_WORD_LETTER',
+          position: newHeadPosition,
+          word: updatedWord,
+          isCorrectLetter: word.isTarget
+        });
 
         dispatch({
           type: 'COMPLETE_WORD',
           word: updatedWord,
           isTargetWord: word.isTarget
         });
+
+        // Check for victory condition
+        dispatch({ type: 'CHECK_VICTORY' });
       }
     });
   }, [gameState.targetWords, gameState.distractorWords, dispatch]);
@@ -111,6 +127,11 @@ export const useSnake = () => {
     segmentType: 'correct' | 'wrong'
   ) => {
     const currentSnake = gameState.snake;
+    const currentHead = currentSnake[0];
+
+    if (!currentHead) {
+      return currentSnake;
+    }
 
     const newSnake: SnakeSegment[] = [
       {
@@ -119,7 +140,7 @@ export const useSnake = () => {
         segmentType: 'head'
       },
       {
-        position: currentSnake[0].position,
+        position: currentHead.position,
         isHead: false,
         segmentType: segmentType
       },

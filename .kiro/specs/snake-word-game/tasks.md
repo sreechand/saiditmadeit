@@ -65,9 +65,16 @@
     - Implement collected words display with correct/incorrect highlighting
     - Add wrong letter counter and real-time statistics display
     - Build current word formation feedback system
-    - _Requirements: 4.1, 4.2, 4.3, 4.4_
+    - _Requirements: 4.1, 4.2, 4.5, 4.6_
 
-  - [x] 4.4 Create game controls and input handling
+  - [ ] 4.4 Implement cell highlighting system for word completion
+    - Add visual state management for letter cell background colors
+    - Implement light green highlighting for completed target words
+    - Implement light red highlighting for completed distractor words
+    - Ensure highlighting persists throughout game session
+    - _Requirements: 4.2, 4.3, 4.4_
+
+  - [x] 4.5 Create game controls and input handling
     - Implement arrow key and WASD input detection
     - Add touch/swipe controls for mobile devices
     - Build pause, restart, and game menu functionality

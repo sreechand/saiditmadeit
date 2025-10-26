@@ -60,10 +60,11 @@ A Snake-themed word puzzle game for Reddit's Devvit platform where players guide
 #### Acceptance Criteria
 
 1. THE Snake_Game_System SHALL display three progress indicators showing word completion status
-2. WHEN Target_Words are collected, THE Snake_Game_System SHALL display them with positive highlighting
-3. WHEN Distractor_Words are collected, THE Snake_Game_System SHALL display them with warning coloring
-4. THE Snake_Game_System SHALL show a counter of wrong letters consumed
-5. THE Snake_Game_System SHALL visually distinguish correct snake segments (green/blue) from wrong segments (red/gray)
+2. WHEN the game starts, THE Snake_Game_System SHALL display all Letter_Cells with white background and black text
+3. WHEN a complete Target_Word is collected, THE Snake_Game_System SHALL highlight all Letter_Cells of that word with light green background
+4. WHEN a complete Distractor_Word is collected, THE Snake_Game_System SHALL highlight all Letter_Cells of that word with light red background
+5. THE Snake_Game_System SHALL show a counter of wrong letters consumed
+6. THE Snake_Game_System SHALL visually distinguish correct snake segments (green/blue) from wrong segments (red/gray)
 
 ### Requirement 5
 

@@ -181,6 +181,20 @@ function validateLetterCollection(
 - Word completion: Highlight entire word with animation
 - Progress tracking: Update UI indicators in real-time
 
+**Cell Highlighting System**
+```typescript
+interface LetterCellVisualState {
+  backgroundColor: 'white' | 'lightgreen' | 'lightred';
+  textColor: 'black';
+  isHighlighted: boolean;
+  wordType?: 'target' | 'distractor';
+}
+```
+- Default state: White background, black text for all cells
+- Target word completion: Light green background for all cells in the word
+- Distractor word completion: Light red background for all cells in the word
+- Highlighting persists until game reset or new puzzle generation
+
 ### Puzzle Generation Algorithm
 
 **Word Placement Strategy**
@@ -262,8 +276,9 @@ function validateLetterCollection(
 - Snake head: Distinct bright color (e.g., dark blue)
 - Correct segments: Success color (green/blue)
 - Wrong segments: Warning color (red/orange)
-- Collected target words: Strong positive highlight (bright green glow)
-- Collected distractor words: Subtle warning color (light red)
+- Default letter cells: White background with black text
+- Collected target words: Light green background highlighting
+- Collected distractor words: Light red background highlighting
 - Grid background: Neutral, high contrast for readability
 
 **Typography and Layout**

@@ -15,7 +15,7 @@ interface GameBoardProps {
 
 interface LetterCellComponentProps {
   cell: LetterCell;
-  snakeSegment?: SnakeSegment;
+  snakeSegment?: SnakeSegment | undefined;
   wordStatus?: 'valid' | 'invalid' | null;
   onClick?: () => void;
   theme?: string;
@@ -122,7 +122,7 @@ const LetterCellComponent: React.FC<LetterCellComponentProps> = ({
     return cell.letter.toUpperCase();
   };
 
-  // Base cell styling with smooth transitions - START WITH WHITE FOR EVERYONE
+  // Base cell styling - ALL CELLS START WITH WHITE BACKGROUND AND BLACK TEXT
   let cellClasses = 'w-full h-full flex items-center justify-center text-lg font-bold border border-gray-400 bg-white text-black transition-smooth cursor-pointer select-none relative overflow-hidden';
 
   // Add collection animation
@@ -130,29 +130,35 @@ const LetterCellComponent: React.FC<LetterCellComponentProps> = ({
     cellClasses += ' animate-letter-collect';
   }
 
-  // Snake segment styling with enhanced animations
+  // Apply word completion highlighting FIRST (this is the base layer)
+  if (wordStatus === 'valid') {
+    // Light green background for completed target words
+    cellClasses = cellClasses.replace('bg-white text-black', 'bg-green-200 text-black border-green-400');
+  } else if (wordStatus === 'invalid') {
+    // Light red background for completed distractor words
+    cellClasses = cellClasses.replace('bg-white text-black', 'bg-red-200 text-black border-red-400');
+  }
+
+  // Snake segment styling OVERRIDES word highlighting when snake is present
   if (isSnakeCell) {
-    // Override white with snake colors
     if (isSnakeHead) {
-      cellClasses = cellClasses.replace('bg-white text-black', 'bg-blue-600 text-white border-blue-700 shadow-lg z-20');
+      // Snake head gets blue color regardless of word status
+      cellClasses = cellClasses.replace(/bg-\w+-\d+/, 'bg-blue-600').replace(/text-\w+/, 'text-white').replace(/border-\w+-\d+/, 'border-blue-700');
+      cellClasses += ' shadow-lg z-20';
       if (isAnimating) {
         cellClasses += ' animate-snake-slither';
       }
     } else if (segmentType === 'correct') {
-      cellClasses = cellClasses.replace('bg-white text-black', 'bg-green-500 text-white border-green-600');
+      // Correct segments get green color
+      cellClasses = cellClasses.replace(/bg-\w+-\d+/, 'bg-green-500').replace(/text-\w+/, 'text-white').replace(/border-\w+-\d+/, 'border-green-600');
       cellClasses += ' animate-snake-grow';
     } else if (segmentType === 'wrong') {
-      cellClasses = cellClasses.replace('bg-white text-black', 'bg-red-500 text-white border-red-600');
+      // Wrong segments get red color
+      cellClasses = cellClasses.replace(/bg-\w+-\d+/, 'bg-red-500').replace(/text-\w+/, 'text-white').replace(/border-\w+-\d+/, 'border-red-600');
       cellClasses += ' animate-wrong-letter-shake';
     }
-  } else if (wordStatus === 'valid') {
-    // Only color non-snake cells that have been collected
-    cellClasses = cellClasses.replace('bg-white text-black', 'bg-green-200 text-gray-800 border-green-400');
-  } else if (wordStatus === 'invalid') {
-    // Only color non-snake cells that have been collected
-    cellClasses = cellClasses.replace('bg-white text-black', 'bg-red-200 text-gray-800 border-red-400');
   }
-  // All other cells remain white (no additional changes)
+  // Cells without snake segments show word highlighting or remain white
   
   return (
     <div 
@@ -197,11 +203,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({
 }) => {
   const [boardAnimation, setBoardAnimation] = useState('');
 
-  console.log('GameBoard render:', {
-    snakeLength: snake.length,
-    snakeDirection,
-    snakePositions: snake.map(s => ({ x: s.position.x, y: s.position.y, isHead: s.isHead, type: s.segmentType }))
-  });
+
 
   // Create a map of snake positions for quick lookup
   const snakePositionMap = new Map<string, SnakeSegment>();
@@ -211,25 +213,22 @@ export const GameBoard: React.FC<GameBoardProps> = ({
   });
 
   // Create a map of word status for each position
-  // Only show color for letters that are part of the snake (collected)
+  // Show highlighting for completed words (regardless of snake position)
   const wordStatusMap = new Map<string, 'valid' | 'invalid'>();
   const allWords = [...targetWords, ...distractorWords];
-  const snakePositions = new Set(snake.map(s => `${s.position.x},${s.position.y}`));
 
   allWords.forEach(word => {
-    const status = word.isTarget ? 'valid' : 'invalid';
-    word.positions.forEach(pos => {
-      const key = `${pos.x},${pos.y}`;
-      // Only set color if this position is occupied by the snake
-      if (snakePositions.has(key)) {
+    // Only highlight cells if the word has been completed
+    if (word.isCollected) {
+      const status = word.isTarget ? 'valid' : 'invalid';
+      word.positions.forEach(pos => {
+        const key = `${pos.x},${pos.y}`;
         wordStatusMap.set(key, status);
-      }
-    });
+      });
+    }
   });
 
-  console.log('GameBoard wordStatusMap:', wordStatusMap.size, 'entries');
-  console.log('Snake positions:', Array.from(snakePositions));
-  console.log('All word positions:', allWords.flatMap(w => w.positions));
+
 
   const handleCellClick = (x: number, y: number) => {
     onCellClick?.(x, y);

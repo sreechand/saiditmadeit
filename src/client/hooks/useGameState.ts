@@ -115,18 +115,18 @@ function gameStateReducer(state: GameState, action: GameAction): GameState {
 
     case 'COLLECT_WORD_LETTER':
       // Update the appropriate word list based on whether it's a target word
-      const updatedTargetWords = action.word.isTarget
+      const letterTargetWords = action.word.isTarget
         ? state.targetWords.map(w => w.id === action.word.id ? action.word : w)
         : state.targetWords;
       
-      const updatedDistractorWords = !action.word.isTarget
+      const letterDistractorWords = !action.word.isTarget
         ? state.distractorWords.map(w => w.id === action.word.id ? action.word : w)
         : state.distractorWords;
 
       return {
         ...state,
-        targetWords: updatedTargetWords,
-        distractorWords: updatedDistractorWords
+        targetWords: letterTargetWords,
+        distractorWords: letterDistractorWords
       };
 
     case 'COMPLETE_WORD':
@@ -136,8 +136,19 @@ function gameStateReducer(state: GameState, action: GameAction): GameState {
         isCorrect: action.isTargetWord
       };
 
+      // Update the word in the appropriate list to mark it as collected
+      const completeTargetWords = action.isTargetWord
+        ? state.targetWords.map(w => w.id === action.word.id ? { ...w, isCollected: true } : w)
+        : state.targetWords;
+      
+      const completeDistractorWords = !action.isTargetWord
+        ? state.distractorWords.map(w => w.id === action.word.id ? { ...w, isCollected: true } : w)
+        : state.distractorWords;
+
       return {
         ...state,
+        targetWords: completeTargetWords,
+        distractorWords: completeDistractorWords,
         collectedWords: [...state.collectedWords, collectedWord]
       };
 
