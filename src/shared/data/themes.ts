@@ -196,7 +196,6 @@ export function validateTheme(theme: Theme): {
   }
   
   // Check for overlaps
-  const targetSet = new Set(validTargets);
   const distractorSet = new Set(validDistractors);
   const overlaps = validTargets.filter(word => distractorSet.has(word));
   

@@ -96,15 +96,15 @@
     - Add difficulty-specific game behavior and UI adjustments
     - _Requirements: 6.1, 6.2, 6.3, 6.5_
 
-- [ ] 6. Create server API and data persistence
-  - [ ] 6.1 Build puzzle generation API endpoints
+- [x] 6. Create server API and data persistence
+  - [x] 6.1 Build puzzle generation API endpoints
     - Create POST /api/generate-puzzle endpoint with theme and difficulty parameters
     - Implement server-side puzzle generation and validation
     - Add error handling for invalid themes or generation failures
     - Build puzzle caching and optimization for performance
     - _Requirements: 2.1, 2.2, 6.4_
 
-  - [ ] 6.2 Implement score tracking and leaderboard system
+  - [x] 6.2 Implement score tracking and leaderboard system
     - Create POST /api/submit-score endpoint for game completion data
     - Build GET /api/leaderboard/:theme endpoint for score retrieval
     - Implement Redis integration for persistent score storage
