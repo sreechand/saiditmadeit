@@ -4,8 +4,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "@devvit/mcp"
-      ]      
+        "@devvit/mcp"      ]      
     }
   }
 }

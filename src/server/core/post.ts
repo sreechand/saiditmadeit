@@ -8,20 +8,20 @@ export const createPost = async () => {
 
   return await reddit.submitCustomPost({
     splash: {
-      // Splash Screen Configuration
-      appDisplayName: 'saiditmadeit',
+      // Splash Screen Configuration for Snake Word Game
+      appDisplayName: 'Snake Word Game',
       backgroundUri: 'default-splash.png',
-      buttonLabel: 'Tap to Start',
-      description: 'An exciting interactive experience',
-      entryUri: 'index.html',
-      heading: 'Welcome to the Game!',
+      buttonLabel: 'Start Playing',
+      description: 'Guide your snake through letters to discover hidden themed words!',
+      heading: 'Snake Word Puzzle',
       appIconUri: 'default-icon.png',
-    },
+    } as any, // Temporary type assertion to handle version mismatch
     postData: {
       gameState: 'initial',
-      score: 0,
+      theme: 'Animals',
+      difficulty: 'medium',
     },
     subredditName: subredditName,
-    title: 'saiditmadeit',
+    title: 'Snake Word Game - Find the Hidden Words!',
   });
 };

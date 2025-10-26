@@ -1,0 +1,21 @@
+{
+  "enabled": true,
+  "name": "README Auto-Update",
+  "description": "Automatically updates the project README file whenever new functions, functionality, or features are implemented in the codebase",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "src/**/*.ts",
+      "src/**/*.tsx",
+      "src/**/*.js",
+      "src/**/*.jsx",
+      "package.json",
+      "devvit.json"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Analyze the recent changes to the codebase and update the README.md file to reflect any new functions, functionality, or features that have been implemented. Review the modified files to understand what new capabilities have been added, then update the README.md with appropriate documentation including:\n\n1. New features or functionality descriptions\n2. Updated usage instructions if applicable\n3. New API endpoints or methods\n4. Updated installation or setup steps if needed\n5. New dependencies or requirements\n6. Updated examples or code snippets\n\nEnsure the README remains well-structured, accurate, and helpful for users and developers. Focus on documenting user-facing changes and significant architectural updates."
+  }
+}
