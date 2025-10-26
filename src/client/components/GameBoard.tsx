@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { LetterCell, SnakeSegment, GAME_CONFIG } from '../../shared/types/game';
+import { LetterCell, SnakeSegment, GAME_CONFIG, Word } from '../../shared/types/game';
 
 interface GameBoardProps {
   grid: LetterCell[][];
   snake: SnakeSegment[];
+  targetWords?: Word[];
+  distractorWords?: Word[];
   onCellClick?: (x: number, y: number) => void;
   className?: string;
   theme?: string;
@@ -14,6 +16,7 @@ interface GameBoardProps {
 interface LetterCellComponentProps {
   cell: LetterCell;
   snakeSegment?: SnakeSegment;
+  wordStatus?: 'valid' | 'invalid' | null;
   onClick?: () => void;
   theme?: string;
   isAnimating?: boolean;
@@ -23,6 +26,7 @@ interface LetterCellComponentProps {
 const LetterCellComponent: React.FC<LetterCellComponentProps> = ({
   cell,
   snakeSegment,
+  wordStatus,
   onClick,
   theme = '',
   isAnimating = false,
@@ -140,7 +144,11 @@ const LetterCellComponent: React.FC<LetterCellComponentProps> = ({
     }
   } else {
     // Regular cell styling with theme colors
-    if (cell.isCollected) {
+    if (wordStatus === 'valid') {
+      cellClasses += ' bg-green-200 text-gray-800 border-green-400';
+    } else if (wordStatus === 'invalid') {
+      cellClasses += ' bg-red-200 text-gray-800 border-red-400';
+    } else if (cell.isCollected) {
       cellClasses += ` bg-yellow-200 text-gray-700 border-yellow-400 opacity-60`;
     } else if (cell.isPartOfWord) {
       cellClasses += ` ${themeColors.secondary} text-gray-800 ${themeColors.border} ${themeColors.hover}`;
@@ -182,6 +190,8 @@ const LetterCellComponent: React.FC<LetterCellComponentProps> = ({
 export const GameBoard: React.FC<GameBoardProps> = ({
   grid,
   snake,
+  targetWords = [],
+  distractorWords = [],
   onCellClick,
   className = '',
   theme = '',
@@ -201,6 +211,20 @@ export const GameBoard: React.FC<GameBoardProps> = ({
   snake.forEach(segment => {
     const key = `${segment.position.x},${segment.position.y}`;
     snakePositionMap.set(key, segment);
+  });
+
+  // Create a map of word status for each position
+  const wordStatusMap = new Map<string, 'valid' | 'invalid'>();
+  const allWords = [...targetWords, ...distractorWords];
+
+  allWords.forEach(word => {
+    if (word.isCollected) {
+      const status = word.isTarget ? 'valid' : 'invalid';
+      word.positions.forEach(pos => {
+        const key = `${pos.x},${pos.y}`;
+        wordStatusMap.set(key, status);
+      });
+    }
   });
 
   const handleCellClick = (x: number, y: number) => {
@@ -249,12 +273,14 @@ export const GameBoard: React.FC<GameBoardProps> = ({
           {grid.map((row, y) =>
             row.map((cell, x) => {
               const snakeSegment = snakePositionMap.get(`${x},${y}`);
-              
+              const wordStatus = wordStatusMap.get(`${x},${y}`) ?? null;
+
               return (
                 <LetterCellComponent
                   key={`${x}-${y}`}
                   cell={cell}
                   snakeSegment={snakeSegment}
+                  wordStatus={wordStatus}
                   onClick={() => handleCellClick(x, y)}
                   theme={theme}
                   isAnimating={isAnimating}

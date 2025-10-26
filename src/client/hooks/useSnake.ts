@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import type { Position, SnakeSegment } from '../../shared/types/game.js';
-import { getNextPosition, isValidPosition } from '../../shared/utils/gameUtils.js';
+import type { Position, SnakeSegment, Word } from '../../shared/types/game.js';
+import { getNextPosition, isValidPosition, positionsEqual } from '../../shared/utils/gameUtils.js';
 import { useGameState } from './useGameState.js';
 
 export const useSnake = () => {
@@ -36,14 +36,18 @@ export const useSnake = () => {
       return;
     }
 
-    // Create new snake with head at new position and body following
+    // Create new snake with head at new position
+    // Don't remove the tail - let the snake grow with each movement
     const newSnake: SnakeSegment[] = [
       {
         position: nextPosition,
         isHead: true,
         segmentType: 'head'
       },
-      ...currentSnake.slice(0, -1) // Remove tail, keep rest of body
+      ...currentSnake.map(segment => ({
+        ...segment,
+        isHead: false
+      }))
     ];
 
     console.log('New snake:', newSnake.map(s => ({ x: s.position.x, y: s.position.y, isHead: s.isHead })));
@@ -60,7 +64,44 @@ export const useSnake = () => {
       type: 'MOVE',
       direction
     });
+
+    // Check which words the snake has passed through and update their status
+    checkAndUpdateWords(nextPosition, newSnake);
   }, [gameState.snake, gameState.gridSize, dispatch]);
+
+  /**
+   * Check if the snake has passed through any complete words
+   * If a word is complete, highlight it as valid or invalid
+   */
+  const checkAndUpdateWords = useCallback((
+    newHeadPosition: Position,
+    newSnake: SnakeSegment[]
+  ) => {
+    const allWords = [...gameState.targetWords, ...gameState.distractorWords];
+
+    // Get all positions currently occupied by the snake
+    const snakePositions = newSnake.map(s => s.position);
+
+    // Check each word to see if all its positions are covered by the snake
+    allWords.forEach(word => {
+      const wordPositions = word.positions;
+      const isWordComplete = wordPositions.every(wordPos =>
+        snakePositions.some(snakePos => positionsEqual(snakePos, wordPos))
+      );
+
+      if (isWordComplete && !word.isCollected) {
+        console.log('Word found:', word.text);
+        // Mark the word as collected
+        const updatedWord = { ...word, isCollected: true };
+
+        dispatch({
+          type: 'COMPLETE_WORD',
+          word: updatedWord,
+          isTargetWord: word.isTarget
+        });
+      }
+    });
+  }, [gameState.targetWords, gameState.distractorWords, dispatch]);
 
   /**
    * Grow snake when collecting a letter

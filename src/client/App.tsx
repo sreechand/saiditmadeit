@@ -216,6 +216,8 @@ export const App = () => {
               <GameBoard
                 grid={gameState.grid}
                 snake={gameState.snake}
+                targetWords={gameState.targetWords}
+                distractorWords={gameState.distractorWords}
                 onCellClick={(x, y) => console.log('Cell clicked:', x, y)}
                 theme={gameState.currentTheme?.category}
                 isAnimating={gameState.gameStatus === 'playing' && !gameState.isSnakeStopped}
