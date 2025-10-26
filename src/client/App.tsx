@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { navigateTo } from '@devvit/web/client';
 import { useGameState } from './hooks/useGameState';
 import { useSnake } from './hooks/useSnake';
@@ -55,7 +55,9 @@ export const App = () => {
   
   // Game control handlers
   const handleMove = (direction: 'up' | 'down' | 'left' | 'right') => {
-    if (gameState.gameStatus === 'playing' && !gameState.isSnakeStopped) {
+    console.log('handleMove called:', direction, 'gameStatus:', gameState.gameStatus);
+    if (gameState.gameStatus === 'playing') {
+      console.log('Calling changeDirection:', direction);
       // Use the snake hook's changeDirection method
       changeDirection(direction);
     }
@@ -76,6 +78,81 @@ export const App = () => {
     // This will be implemented when we have puzzle generation
     console.log('Theme changed to:', theme);
   };
+
+  // Global keyboard handler
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    console.log('Key pressed:', event.key, 'gameStarted:', gameStarted, 'gameStatus:', gameState.gameStatus);
+    
+    if (!gameStarted || gameState.gameStatus !== 'playing') {
+      console.log('Blocked - gameStarted:', gameStarted, 'gameStatus:', gameState.gameStatus);
+      return;
+    }
+    
+    // Prevent default behavior for game keys
+    const gameKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd', ' ', 'r'];
+    if (gameKeys.includes(event.key) || gameKeys.includes(event.code)) {
+      event.preventDefault();
+    }
+    
+    switch (event.key) {
+      // Arrow keys
+      case 'ArrowUp':
+        console.log('Moving up');
+        handleMove('up');
+        break;
+      case 'ArrowDown':
+        console.log('Moving down');
+        handleMove('down');
+        break;
+      case 'ArrowLeft':
+        console.log('Moving left');
+        handleMove('left');
+        break;
+      case 'ArrowRight':
+        console.log('Moving right');
+        handleMove('right');
+        break;
+      
+      // WASD keys
+      case 'w':
+      case 'W':
+        console.log('Moving up (W)');
+        handleMove('up');
+        break;
+      case 's':
+      case 'S':
+        console.log('Moving down (S)');
+        handleMove('down');
+        break;
+      case 'a':
+      case 'A':
+        console.log('Moving left (A)');
+        handleMove('left');
+        break;
+      case 'd':
+      case 'D':
+        console.log('Moving right (D)');
+        handleMove('right');
+        break;
+      
+      // Game control keys
+      case ' ':
+        gameState.gameStatus === 'paused' ? resumeGame() : pauseGame();
+        break;
+      case 'r':
+      case 'R':
+        resetGame();
+        break;
+    }
+  }, [gameStarted, gameState.gameStatus, handleMove, pauseGame, resumeGame, resetGame]);
+
+  // Set up global keyboard listener
+  useEffect(() => {
+    if (gameStarted) {
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [gameStarted, handleKeyDown]);
   
   // Show splash screen if game hasn't started
   if (!gameStarted) {
@@ -117,7 +194,11 @@ export const App = () => {
   
   // Main game interface
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
+    <div 
+      className="min-h-screen bg-gray-100 p-4 focus:outline-none" 
+      tabIndex={0}
+      onClick={() => document.querySelector<HTMLDivElement>('.min-h-screen')?.focus()}
+    >
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Left sidebar - Word tracker and stats */}

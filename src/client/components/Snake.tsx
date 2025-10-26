@@ -92,6 +92,8 @@ export const Snake: React.FC<SnakeProps> = ({
   gridSize,
   className = ''
 }) => {
+  console.log('Snake component render:', { snake, direction, isMoving });
+  
   if (snake.length === 0) return null;
   
   return (

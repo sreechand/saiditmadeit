@@ -123,7 +123,7 @@ const TouchControls: React.FC<TouchControlsProps> = ({ onMove, isGameActive }) =
   );
 };
 
-// Keyboard controls hook
+// Keyboard controls hook - now just for display purposes
 const useKeyboardControls = ({
   onMove,
   onPause,
@@ -132,58 +132,8 @@ const useKeyboardControls = ({
   isPaused,
   isGameActive
 }: KeyboardControlsProps) => {
-  const handleKeyPress = useCallback((event: KeyboardEvent) => {
-    if (!isGameActive) return;
-    
-    // Prevent default behavior for game keys
-    const gameKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd', ' ', 'r'];
-    if (gameKeys.includes(event.key.toLowerCase()) || gameKeys.includes(event.code)) {
-      event.preventDefault();
-    }
-    
-    switch (event.key.toLowerCase()) {
-      // Arrow keys
-      case 'arrowup':
-        onMove('up');
-        break;
-      case 'arrowdown':
-        onMove('down');
-        break;
-      case 'arrowleft':
-        onMove('left');
-        break;
-      case 'arrowright':
-        onMove('right');
-        break;
-      
-      // WASD keys
-      case 'w':
-        onMove('up');
-        break;
-      case 's':
-        onMove('down');
-        break;
-      case 'a':
-        onMove('left');
-        break;
-      case 'd':
-        onMove('right');
-        break;
-      
-      // Game control keys
-      case ' ':
-        isPaused ? onResume() : onPause();
-        break;
-      case 'r':
-        onRestart();
-        break;
-    }
-  }, [onMove, onPause, onResume, onRestart, isPaused, isGameActive]);
-  
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [handleKeyPress]);
+  // Keyboard handling is now done globally in App.tsx
+  // This hook is kept for interface compatibility
 };
 
 // Game menu component
@@ -374,6 +324,15 @@ export const GameControls: React.FC<GameControlsProps> = ({
         >
           Settings
         </button>
+        
+        {/* Test movement buttons */}
+        <button
+          onClick={() => onMove('up')}
+          disabled={!isGameActive}
+          className="bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white px-2 py-1 rounded text-xs"
+        >
+          Test ↑
+        </button>
       </div>
       
       {/* Touch controls for mobile */}
@@ -396,6 +355,7 @@ export const GameControls: React.FC<GameControlsProps> = ({
             <div>R: Restart Game</div>
             <div>Settings: Click button above</div>
           </div>
+
         </div>
       )}
       

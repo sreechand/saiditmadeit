@@ -25,12 +25,13 @@ export const useSnake = () => {
 
   // Move snake to next position
   const moveSnakeToPosition = useCallback((newHeadPosition: Position) => {
+    console.log('moveSnakeToPosition called:', newHeadPosition);
     const currentSnake = gameState.snake;
     const grid = gameState.grid;
     
     // Check for boundary collision
     if (!isValidPosition(newHeadPosition, gameState.gridSize)) {
-      console.log('Snake hit boundary');
+      console.log('Snake hit boundary at:', newHeadPosition, 'gridSize:', gameState.gridSize);
       return false;
     }
 
@@ -46,6 +47,7 @@ export const useSnake = () => {
     
     if (letterCell && !letterCell.isCollected) {
       // Snake reached a letter cell - stop and wait for input
+      console.log('Snake reached letter cell:', letterCell);
       dispatch({
         type: 'COLLECT_LETTER',
         position: newHeadPosition
@@ -68,12 +70,13 @@ export const useSnake = () => {
       })).slice(0, -1) // Remove tail (snake doesn't grow when moving to empty cell)
     ];
 
+    console.log('Dispatching MOVE_SNAKE_TO_POSITION with new snake:', newSnake);
     // Update snake position
     dispatch({
       type: 'MOVE_SNAKE_TO_POSITION',
       snake: newSnake,
       isSnakeStopped: false
-    } as any); // We'll add this action type
+    });
 
     return true;
   }, [gameState.snake, gameState.grid, gameState.gridSize, dispatch]);
@@ -85,6 +88,14 @@ export const useSnake = () => {
   ) => {
     const currentSnake = gameState.snake;
     
+    if (currentSnake.length === 0) {
+      return [{
+        position: newHeadPosition,
+        isHead: true,
+        segmentType: 'head'
+      }];
+    }
+    
     const newSnake: SnakeSegment[] = [
       {
         position: newHeadPosition,
@@ -93,7 +104,7 @@ export const useSnake = () => {
       },
       // Convert old head to body segment with appropriate type
       {
-        position: currentSnake[0].position,
+        position: currentSnake[0]!.position,
         isHead: false,
         segmentType: segmentType
       },
@@ -172,7 +183,7 @@ export const useSnake = () => {
       // Update snake state to not stopped
       dispatch({
         type: 'RESUME_SNAKE_MOVEMENT'
-      } as any); // We'll add this action type
+      });
       
       // Restart movement timer
       startMovement();
@@ -181,13 +192,21 @@ export const useSnake = () => {
 
   // Handle direction change
   const changeDirection = useCallback((newDirection: 'up' | 'down' | 'left' | 'right') => {
+    console.log('changeDirection called:', newDirection, 'current snake position:', gameState.snake[0]?.position);
+    
     // Prevent moving backwards into the snake body
     const currentHead = gameState.snake[0];
     if (!currentHead || gameState.snake.length < 2) {
+      console.log('Dispatching MOVE action (no collision check needed)');
       dispatch({
         type: 'MOVE',
         direction: newDirection
       });
+      
+      // Immediately move the snake one step in the new direction
+      const nextPosition = getNextPosition(currentHead?.position || { x: 0, y: 0 }, newDirection);
+      console.log('Moving immediately to:', nextPosition);
+      moveSnakeToPosition(nextPosition);
       return;
     }
 
@@ -196,14 +215,19 @@ export const useSnake = () => {
     
     // Don't allow moving directly into the second segment (backwards)
     if (secondSegment && positionsEqual(nextPosition, secondSegment.position)) {
+      console.log('Blocked backwards movement');
       return;
     }
 
+    console.log('Dispatching MOVE action and moving immediately');
     dispatch({
       type: 'MOVE',
       direction: newDirection
     });
-  }, [gameState.snake, dispatch]);
+    
+    // Immediately move the snake one step in the new direction
+    moveSnakeToPosition(nextPosition);
+  }, [gameState.snake, dispatch, moveSnakeToPosition]);
 
   // Reset snake to initial position
   const resetSnake = useCallback(() => {
