@@ -1,6 +1,18 @@
 ## Snake Word Game
 
-A Snake-themed word puzzle game for Reddit's Devvit platform where players guide a snake through a 6×6 grid of letters to spell out three hidden themed words. The game combines classic snake mechanics with word discovery gameplay, challenging players to find and collect target words while avoiding distractor words.
+A revolutionary Snake-themed word puzzle game for Reddit's Devvit platform that combines classic snake mechanics with strategic word discovery gameplay. Players guide a snake through a 6×6 grid of letters to collect three hidden themed words while avoiding distractor words, creating an engaging blend of action and vocabulary skills.
+
+### What Makes This Game Unique
+
+🐍 **Stop-and-Wait Innovation**: Unlike traditional snake games, the snake automatically stops at each letter cell, allowing players to strategically plan their next move and think about word formation.
+
+🎯 **Intelligent Puzzle Generation**: Advanced algorithm creates solvable puzzles with proper word distribution, ensuring every game is both challenging and fair.
+
+🎨 **Visual Word Formation**: Snake segments change color based on correctness - green/blue for target word letters, red/gray for mistakes, providing instant visual feedback.
+
+🧩 **Multi-Directional Word Placement**: Words can be placed horizontally or vertically in both directions (left-to-right, right-to-left, top-to-bottom, bottom-to-top), creating complex puzzle layouts.
+
+📱 **Mobile-Optimized Controls**: Supports both keyboard (WASD/Arrow keys) and touch controls (swipe gestures) for seamless gameplay across devices.
 
 ### Technology Stack
 
@@ -11,34 +23,91 @@ A Snake-themed word puzzle game for Reddit's Devvit platform where players guide
 - [Tailwind](https://tailwindcss.com/): For responsive styling
 - [TypeScript](https://www.typescriptlang.org/): For type safety across client and server
 
-## Game Features
+## How to Play
 
-### Core Gameplay
-- **Snake Movement**: Control a snake through a 6×6 letter grid using arrow keys or WASD
-- **Word Collection**: Eat letters in sequence to spell out hidden themed words
-- **Stop-and-Wait Mechanic**: Snake automatically stops at each letter for strategic planning
-- **Visual Feedback**: Color-coded snake segments (green/blue for correct, red/gray for wrong letters)
+### Game Objective
+Find and collect all three hidden target words by guiding your snake through the letter grid. Target words share a common theme, while distractor words are designed to mislead you.
 
-### Puzzle System
-- **Themed Word Puzzles**: Five categories with extensive word databases
-  - **Animals**: 22 target words (CAT, DOG, EAGLE, SHARK, etc.) + 21 distractors
-  - **Colors**: 19 target words (RED, BLUE, VIOLET, CORAL, etc.) + 20 distractors  
-  - **Food**: 21 target words (APPLE, PIZZA, HONEY, BEANS, etc.) + 20 distractors
-  - **Sports**: 19 target words (SOCCER, TENNIS, RUGBY, DIVE, etc.) + 21 distractors
-  - **Nature**: 21 target words (TREE, OCEAN, FOREST, BEACH, etc.) + 20 distractors
-- **Multiple Orientations**: Words placed horizontally and vertically in both directions
-- **Smart Generation**: Advanced algorithm ensures solvable puzzles with proper word distribution
+### Step-by-Step Instructions
+
+#### 1. **Starting the Game**
+- The game begins with your snake (blue head) at position (0,0) in the top-left corner
+- You'll see a 6×6 grid filled with letters
+- Three target words are hidden in the grid, along with 2+ distractor words
+
+#### 2. **Moving Your Snake**
+- **Desktop**: Use Arrow Keys or WASD to move up, down, left, right
+- **Mobile**: Swipe in the direction you want to move
+- **Auto-Stop**: Your snake automatically stops when it reaches any letter
+
+#### 3. **Collecting Letters**
+- When stopped at a letter, the game checks if it's the correct next letter for any target word
+- **Correct Letter**: Snake grows with a green/blue segment, you earn 10 points
+- **Wrong Letter**: Snake grows with a red/gray segment, you lose 5 points
+- After collecting a letter, press any movement key to continue
+
+#### 4. **Word Formation Rules**
+- Letters must be collected in sequence (first letter → last letter)
+- Words can be spelled in any direction the word is placed
+- You can collect target words in any order
+- Distractor words give fewer points and don't count toward victory
+
+#### 5. **Winning the Game**
+- Collect all three target words to win
+- **Word Completion Bonus**: 50 points for target words, 25 for distractors
+- **Victory Screen**: Shows the theme, your final score, and statistics
+
+#### 6. **Game Controls**
+- **Spacebar**: Pause/Resume the game
+- **R Key**: Reset the game
+- **Movement**: Arrow Keys, WASD, or swipe gestures
 
 ### Difficulty Levels
-- **Easy**: Target words visible, slower snake speed (2 cells/sec)
-- **Medium**: Word blanks with letter counts, moderate speed (3 cells/sec)
-- **Hard**: No hints, faster snake speed (4 cells/sec)
+
+#### Easy Mode (2 cells/second)
+- Target words are visible on screen
+- Slower snake movement for careful planning
+- Best for learning the game mechanics
+
+#### Medium Mode (3 cells/second)
+- Shows word blanks with letter counts (e.g., "_ _ _ _" for 4-letter word)
+- Moderate snake speed
+- Balanced challenge for regular players
+
+#### Hard Mode (4 cells/second)
+- No hints about target words
+- Faster snake movement requires quick decisions
+- Maximum challenge for experienced players
+
+### Themed Categories
+
+#### 🐾 Animals
+Target words like CAT, DOG, EAGLE, SHARK, WHALE, TIGER
+Distractors from other categories to confuse players
+
+#### 🎨 Colors  
+Target words like RED, BLUE, VIOLET, CORAL, INDIGO
+Mixed with non-color words as distractors
+
+#### 🍎 Food
+Target words like APPLE, PIZZA, HONEY, BEANS, GRAPE
+Combined with non-food distractors
+
+#### ⚽ Sports
+Target words like SOCCER, TENNIS, RUGBY, DIVE, SWIM
+Includes various athletic activities and sports terms
+
+#### 🌲 Nature
+Target words like TREE, OCEAN, FOREST, BEACH, RIVER
+Natural world elements and landscapes
 
 ### Scoring System
-- **Correct Letters**: 10 points per letter + 50 point word completion bonus
-- **Wrong Letter Penalty**: -5 points per incorrect letter
-- **Time Bonus**: Faster completion yields higher scores
-- **Final Statistics**: Track snake length, wrong letters, and completion time
+- **Correct Letters**: 10 points each
+- **Target Word Completion**: 50 point bonus
+- **Distractor Word Completion**: 25 point bonus  
+- **Wrong Letter Penalty**: -5 points each
+- **Time Bonus**: Faster completion = higher final score
+- **Final Statistics**: Snake length, accuracy, completion time
 
 ## Getting Started
 
@@ -114,24 +183,59 @@ GET /api/leaderboard/:theme
 
 ## Game Architecture
 
+The Snake Word Game features a sophisticated architecture built with modern web technologies and advanced game design principles:
+
 ### Puzzle Generation System
-- **Advanced Algorithm**: Intelligently places 3 target words + 2+ distractor words
-- **Collision Detection**: Prevents invalid word overlaps and ensures grid boundaries
-- **Solvability Validation**: Ensures all target words are reachable by snake movement
-- **Fallback Generation**: Provides simple backup puzzles if complex generation fails
-- **Performance Optimization**: Multiple generation attempts to find optimal word placement
+- **Multi-Attempt Algorithm**: Tries up to 100 generation attempts to create optimal puzzles
+- **Multi-Directional Placement**: Words placed horizontally (left-to-right, right-to-left) and vertically (top-to-bottom, bottom-to-top)
+- **Smart Collision Detection**: Prevents invalid overlaps while allowing strategic letter sharing
+- **Pathfinding Validation**: Ensures all target words are reachable using A* pathfinding algorithms
+- **Quality Scoring**: Rates puzzles based on word distribution, orientation variety, and accessibility
+- **Fallback Generation**: Provides guaranteed-solvable simple puzzles if complex generation fails
 
-### Theme Management
-- **Extensive Word Database**: 100+ words across 5 themed categories
-- **Difficulty-Aware Selection**: Filters words by length and complexity based on difficulty
-- **Conflict Avoidance**: Prevents words with too many shared letters to reduce confusion
-- **Validation System**: Comprehensive theme and word validation with error reporting
+### Game State Management Architecture
+- **`useGameState`**: Central state management using React's useReducer pattern with comprehensive action types
+- **`useSnake`**: Handles movement physics, collision detection, automatic stopping, and growth mechanics
+- **`useWordCollection`**: Manages letter validation, sequential word formation, and scoring logic
+- **`useGameController`**: Coordinates input handling (keyboard + touch), game flow, and event management
+- **TypeScript Safety**: Strict typing across all components with shared interfaces and comprehensive error handling
 
-### Game State Management
-- **React Hooks**: Custom hooks for game state, snake movement, and word collection
-- **TypeScript Safety**: Strict typing across all game components and API interfaces
-- **Real-time Updates**: Immediate visual feedback for all player actions
-- **Persistence**: Redis integration for score tracking and leaderboards
+### Theme Management System
+- **Curated Word Database**: 100+ carefully selected words across 5 themed categories
+- **Difficulty-Aware Filtering**: Dynamically selects words based on length and complexity for chosen difficulty
+- **Conflict Avoidance Algorithm**: Prevents words with excessive shared letters to reduce player confusion
+- **Comprehensive Validation**: Multi-layer validation system with detailed error reporting and warnings
+- **Smart Grid Filling**: Uses uncommon consonants to avoid accidental word formations in empty cells
+
+### Advanced Game Mechanics
+- **Stop-and-Wait Innovation**: Snake automatically pauses at letter cells for strategic decision-making
+- **Visual Feedback System**: Real-time color coding of snake segments (blue head, green correct, red wrong)
+- **Sequential Word Formation**: Enforces correct letter order collection with progress tracking
+- **Multi-Input Support**: Seamless keyboard (WASD/Arrows) and touch (swipe) controls
+- **Responsive Timing**: Configurable snake speeds (2-4 cells/second) based on difficulty level
+
+## Current Development Status
+
+### ✅ Completed Features
+- **Complete Game Logic**: All core game mechanics implemented via React hooks
+- **Puzzle Generation**: Advanced algorithm with multi-directional word placement and validation
+- **Snake Movement System**: Physics, collision detection, and stop-and-wait mechanics
+- **Word Collection Logic**: Sequential letter validation and scoring system
+- **Input Handling**: Keyboard and touch controls with direction validation
+- **Theme Database**: 100+ words across 5 categories with smart selection algorithms
+- **State Management**: Comprehensive React hooks architecture with TypeScript safety
+
+### 🚧 In Progress
+- **Game UI Components**: React components for game board, snake visualization, and word tracking
+- **Victory/Game Over Screens**: End game displays with statistics and replay options
+- **Visual Effects**: Animations for word completion, snake growth, and score updates
+
+### 📋 Next Steps
+1. **Build Game Board Component**: 6×6 grid with letter cells and snake visualization
+2. **Create Word Tracker UI**: Progress indicators for target words and collected words display
+3. **Implement Game Controls**: Pause/resume buttons, difficulty selection, theme picker
+4. **Add Victory Screen**: Theme reveal, final statistics, and replay functionality
+5. **Polish Visual Design**: Animations, particle effects, and mobile-responsive styling
 
 ## Testing and Development
 
@@ -178,6 +282,13 @@ The game includes comprehensive puzzle validation:
 - **Mobile Optimization**: Responsive design for mobile Reddit users
 - **Performance**: Optimized for smooth gameplay at 60fps
 
-## Cursor Integration
+## Development Tools
 
-This project came with a pre-configured Cursor environment. But I used [Kiro](https::/kiro.dev) to build.
+This Snake Word Game was built using [Kiro](https://kiro.dev), an AI-powered development environment that enabled rapid prototyping and implementation of complex game mechanics. The project showcases advanced React patterns, TypeScript architecture, and sophisticated puzzle generation algorithms.
+
+### Key Implementation Highlights
+- **Modular Hook Architecture**: Clean separation of concerns across game systems
+- **Advanced Puzzle Generation**: Multi-attempt algorithm with quality scoring and validation
+- **Comprehensive Type Safety**: Strict TypeScript interfaces across client, server, and shared code
+- **Mobile-First Design**: Touch controls and responsive layout considerations
+- **Performance Optimization**: Efficient state management and rendering patterns
