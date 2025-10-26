@@ -6,6 +6,7 @@ export * from './types/api.js';
 
 // Utilities
 export * from './utils/gameUtils.js';
+export * from './utils/puzzleGenerator.js';
 
 // Data
 export * from './data/themes.js';

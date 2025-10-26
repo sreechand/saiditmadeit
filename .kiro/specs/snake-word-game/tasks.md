@@ -6,40 +6,40 @@
   - Set up basic project structure for game components
   - _Requirements: 1.1, 2.1, 6.4_
 
-- [ ] 2. Implement puzzle generation system
-  - [ ] 2.1 Create word database and theme management
+- [x] 2. Implement puzzle generation system
+  - [x] 2.1 Create word database and theme management
     - Build theme definitions with target and distractor words for each category
     - Implement word validation and filtering utilities
     - Create theme selection and random theme generation logic
     - _Requirements: 2.1, 2.2, 6.4_
 
-  - [ ] 2.2 Develop grid generation algorithm
+  - [x] 2.2 Develop grid generation algorithm
     - Implement word placement logic for all four orientations (horizontal/vertical, both directions)
     - Create collision detection for word overlaps and boundary validation
     - Build random letter filling system that avoids accidental word formations
     - _Requirements: 2.3, 2.4, 2.5_
 
-  - [ ] 2.3 Add puzzle validation and solvability checking
+  - [x] 2.3 Add puzzle validation and solvability checking
     - Ensure all target words are reachable by snake movement
     - Validate puzzle completeness and word accessibility
     - Implement fallback generation for failed puzzle attempts
     - _Requirements: 2.4, 2.5_
 
-- [ ] 3. Create core game state management
-  - [ ] 3.1 Implement game state hooks and context
+- [x] 3. Create core game state management
+  - [x] 3.1 Implement game state hooks and context
     - Build React context for global game state management
     - Create custom hooks for game state updates and snake management
     - Implement game initialization and reset functionality
     - _Requirements: 1.1, 3.4, 5.5_
 
-  - [ ] 3.2 Develop snake entity logic
+  - [x] 3.2 Develop snake entity logic
     - Create snake movement system with direction control
     - Implement growth mechanics for correct and wrong letter collection
     - Build collision detection for boundaries and self-collision
     - Add stop-and-wait mechanic when reaching letter cells
     - _Requirements: 1.2, 1.3, 1.4, 3.1, 3.2_
 
-  - [ ] 3.3 Build word collection and validation system
+  - [x] 3.3 Build word collection and validation system
     - Implement sequential letter collection validation
     - Create word completion detection and progress tracking
     - Add visual feedback system for collected words and snake segments

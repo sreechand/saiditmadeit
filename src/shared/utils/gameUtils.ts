@@ -232,6 +232,106 @@ export function getRandomConsonant(): string {
 }
 
 /**
+ * Generate random letter with weighted distribution to avoid common patterns
+ */
+export function getRandomFillerLetter(avoidLetters: Set<string> = new Set()): string {
+  // Less common consonants to avoid accidental word formation
+  const uncommonConsonants = 'QXZJKWVFHPBCGD';
+  const commonConsonants = 'TNRLSM';
+  
+  // Prefer uncommon consonants 70% of the time
+  const useUncommon = Math.random() < 0.7;
+  const letterSet = useUncommon ? uncommonConsonants : commonConsonants;
+  
+  let attempts = 0;
+  let letter: string;
+  
+  do {
+    letter = letterSet[Math.floor(Math.random() * letterSet.length)] || 'X';
+    attempts++;
+  } while (avoidLetters.has(letter) && attempts < 10);
+  
+  return letter;
+}
+
+/**
+ * Check for potential accidental word formations in grid
+ */
+export function hasAccidentalWords(
+  grid: LetterCell[][],
+  knownWords: Set<string>,
+  minWordLength: number = 3
+): boolean {
+  const gridSize = grid.length;
+  
+  // Check horizontal words
+  for (let y = 0; y < gridSize; y++) {
+    for (let x = 0; x <= gridSize - minWordLength; x++) {
+      const word = extractHorizontalWord(grid, x, y, minWordLength);
+      if (word && knownWords.has(word)) {
+        return true;
+      }
+    }
+  }
+  
+  // Check vertical words
+  for (let x = 0; x < gridSize; x++) {
+    for (let y = 0; y <= gridSize - minWordLength; y++) {
+      const word = extractVerticalWord(grid, x, y, minWordLength);
+      if (word && knownWords.has(word)) {
+        return true;
+      }
+    }
+  }
+  
+  return false;
+}
+
+/**
+ * Extract horizontal word from grid starting at position
+ */
+function extractHorizontalWord(
+  grid: LetterCell[][],
+  startX: number,
+  y: number,
+  length: number
+): string | null {
+  let word = '';
+  
+  for (let x = startX; x < startX + length && x < grid.length; x++) {
+    const cell = grid[y]?.[x];
+    if (!cell || cell.letter === '') {
+      return null;
+    }
+    word += cell.letter;
+  }
+  
+  return word.length === length ? word : null;
+}
+
+/**
+ * Extract vertical word from grid starting at position
+ */
+function extractVerticalWord(
+  grid: LetterCell[][],
+  x: number,
+  startY: number,
+  length: number
+): string | null {
+  let word = '';
+  
+  for (let y = startY; y < startY + length && y < grid.length; y++) {
+    const cell = grid[y]?.[x];
+    if (!cell || cell.letter === '') {
+      return null;
+    }
+    word += cell.letter;
+  }
+  
+  return word.length === length ? word : null;
+}
+
+/**
  * Check if position is reachable by snake movement
  */
 export function isPositionReachable(

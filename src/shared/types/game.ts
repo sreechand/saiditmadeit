@@ -162,10 +162,62 @@ export interface InitializeGameAction {
   };
 }
 
+export interface MoveSnakeToPositionAction {
+  type: 'MOVE_SNAKE_TO_POSITION';
+  snake: SnakeSegment[];
+  isSnakeStopped: boolean;
+}
+
+export interface ResumeSnakeMovementAction {
+  type: 'RESUME_SNAKE_MOVEMENT';
+}
+
+export interface UpdateSnakeAction {
+  type: 'UPDATE_SNAKE';
+  snake: SnakeSegment[];
+  isSnakeStopped?: boolean;
+}
+
+export interface CollectWordLetterAction {
+  type: 'COLLECT_WORD_LETTER';
+  position: Position;
+  word: Word;
+  isCorrectLetter: boolean;
+}
+
+export interface CompleteWordAction {
+  type: 'COMPLETE_WORD';
+  word: Word;
+  isTargetWord: boolean;
+}
+
+export interface UpdateScoreAction {
+  type: 'UPDATE_SCORE';
+  score: number;
+  wrongLetterCount: number;
+}
+
+export interface CheckVictoryAction {
+  type: 'CHECK_VICTORY';
+}
+
+export interface UpdateGridAction {
+  type: 'UPDATE_GRID';
+  grid: LetterCell[][];
+}
+
 export type GameAction = 
   | MoveAction 
   | CollectLetterAction 
   | PauseAction 
   | ResumeAction 
   | ResetAction 
-  | InitializeGameAction;
+  | InitializeGameAction
+  | MoveSnakeToPositionAction
+  | ResumeSnakeMovementAction
+  | UpdateSnakeAction
+  | CollectWordLetterAction
+  | CompleteWordAction
+  | UpdateScoreAction
+  | CheckVictoryAction
+  | UpdateGridAction;
