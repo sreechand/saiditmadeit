@@ -1,0 +1,131 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient Background -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="snakeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#059669;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#047857;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="letterGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d97706;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bgGradient)"/>
+  
+  <!-- Grid Pattern -->
+  <g opacity="0.1">
+    <defs>
+      <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+        <path d="M 60 0 L 0 0 0 60" fill="none" stroke="white" stroke-width="1"/>
+      </pattern>
+    </defs>
+    <rect width="800" height="600" fill="url(#grid)" />
+  </g>
+  
+  <!-- Game Grid Representation -->
+  <g transform="translate(250, 150)">
+    <!-- Grid cells -->
+    <g opacity="0.3">
+      <rect x="0" y="0" width="50" height="50" fill="white" rx="5"/>
+      <rect x="60" y="0" width="50" height="50" fill="white" rx="5"/>
+      <rect x="120" y="0" width="50" height="50" fill="white" rx="5"/>
+      <rect x="180" y="0" width="50" height="50" fill="white" rx="5"/>
+      <rect x="240" y="0" width="50" height="50" fill="white" rx="5"/>
+      <rect x="300" y="0" width="50" height="50" fill="white" rx="5"/>
+      
+      <rect x="0" y="60" width="50" height="50" fill="white" rx="5"/>
+      <rect x="60" y="60" width="50" height="50" fill="white" rx="5"/>
+      <rect x="120" y="60" width="50" height="50" fill="white" rx="5"/>
+      <rect x="180" y="60" width="50" height="50" fill="white" rx="5"/>
+      <rect x="240" y="60" width="50" height="50" fill="white" rx="5"/>
+      <rect x="300" y="60" width="50" height="50" fill="white" rx="5"/>
+      
+      <rect x="0" y="120" width="50" height="50" fill="white" rx="5"/>
+      <rect x="60" y="120" width="50" height="50" fill="white" rx="5"/>
+      <rect x="120" y="120" width="50" height="50" fill="white" rx="5"/>
+      <rect x="180" y="120" width="50" height="50" fill="white" rx="5"/>
+      <rect x="240" y="120" width="50" height="50" fill="white" rx="5"/>
+      <rect x="300" y="120" width="50" height="50" fill="white" rx="5"/>
+    </g>
+    
+    <!-- Sample Letters -->
+    <text x="25" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#374151">C</text>
+    <text x="85" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#374151">A</text>
+    <text x="145" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#374151">T</text>
+    <text x="205" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#6b7280">X</text>
+    <text x="265" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#6b7280">M</text>
+    <text x="325" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#6b7280">P</text>
+    
+    <text x="25" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#6b7280">R</text>
+    <text x="85" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#374151">D</text>
+    <text x="145" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#374151">O</text>
+    <text x="205" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#374151">G</text>
+    <text x="265" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#6b7280">K</text>
+    <text x="325" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#6b7280">L</text>
+    
+    <text x="25" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#6b7280">N</text>
+    <text x="85" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#6b7280">Q</text>
+    <text x="145" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#6b7280">W</text>
+    <text x="205" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#6b7280">Z</text>
+    <text x="265" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#6b7280">V</text>
+    <text x="325" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#6b7280">B</text>
+  </g>
+  
+  <!-- Snake -->
+  <g transform="translate(250, 150)">
+    <!-- Snake head -->
+    <circle cx="25" cy="25" r="20" fill="url(#snakeGradient)" stroke="#047857" stroke-width="3"/>
+    <circle cx="20" cy="20" r="3" fill="white"/>
+    <circle cx="30" cy="20" r="3" fill="white"/>
+    <circle cx="20" cy="20" r="1.5" fill="black"/>
+    <circle cx="30" cy="20" r="1.5" fill="black"/>
+    
+    <!-- Snake body segments -->
+    <circle cx="85" cy="25" r="18" fill="#10b981" stroke="#047857" stroke-width="2"/>
+    <circle cx="145" cy="25" r="18" fill="#10b981" stroke="#047857" stroke-width="2"/>
+    <circle cx="205" cy="85" r="18" fill="#10b981" stroke="#047857" stroke-width="2"/>
+    
+    <!-- Path indicator -->
+    <path d="M 45 25 Q 65 25 65 25" stroke="#10b981" stroke-width="4" fill="none" opacity="0.6" stroke-dasharray="5,5">
+      <animate attributeName="stroke-dashoffset" values="0;10" dur="1s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 105 25 Q 125 25 125 25" stroke="#10b981" stroke-width="4" fill="none" opacity="0.6" stroke-dasharray="5,5">
+      <animate attributeName="stroke-dashoffset" values="0;10" dur="1s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 165 25 Q 185 25 185 55 Q 185 85 205 85" stroke="#10b981" stroke-width="4" fill="none" opacity="0.6" stroke-dasharray="5,5">
+      <animate attributeName="stroke-dashoffset" values="0;10" dur="1s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  
+  <!-- Floating Letters Animation -->
+  <g opacity="0.7">
+    <text x="100" y="100" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="url(#letterGradient)">S</text>
+    <text x="650" y="150" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="url(#letterGradient)">N</text>
+    <text x="120" y="450" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="url(#letterGradient)">A</text>
+    <text x="680" y="400" font-family="Arial, sans-serif" font-size="30" font-weight="bold" fill="url(#letterGradient)">K</text>
+    <text x="50" y="300" font-family="Arial, sans-serif" font-size="34" font-weight="bold" fill="url(#letterGradient)">E</text>
+    
+    <animateTransform attributeName="transform" type="translate" values="0,0; 0,-10; 0,0" dur="3s" repeatCount="indefinite"/>
+  </g>
+  
+  <!-- Title Area -->
+  <rect x="50" y="50" width="700" height="80" fill="rgba(255,255,255,0.1)" rx="15" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+  <text x="400" y="85" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="white">🐍 SNAKE WORD PUZZLE</text>
+  <text x="400" y="110" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="rgba(255,255,255,0.9)">Guide your snake to discover hidden themed words!</text>
+  
+  <!-- Bottom decoration -->
+  <g transform="translate(0, 520)">
+    <rect width="800" height="80" fill="rgba(0,0,0,0.2)"/>
+    <text x="400" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="rgba(255,255,255,0.8)">🎯 Find 3 themed words  •  🏆 Beat your best time  •  🌟 Multiple difficulty levels</text>
+    <text x="400" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="rgba(255,255,255,0.6)">Animals • Colors • Food • Sports • Nature</text>
+  </g>
+</svg>

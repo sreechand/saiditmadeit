@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 800px;
+            height: 600px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .grid-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+        
+        .game-preview {
+            position: absolute;
+            top: 150px;
+            left: 250px;
+            display: grid;
+            grid-template-columns: repeat(6, 50px);
+            grid-gap: 10px;
+        }
+        
+        .cell {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #374151;
+        }
+        
+        .snake-head {
+            background: linear-gradient(45deg, #10b981, #059669) !important;
+            color: white !important;
+            border: 3px solid #047857;
+            position: relative;
+        }
+        
+        .snake-head::before {
+            content: '👁️';
+            position: absolute;
+            top: -5px;
+            left: 5px;
+            font-size: 12px;
+        }
+        
+        .snake-head::after {
+            content: '👁️';
+            position: absolute;
+            top: -5px;
+            right: 5px;
+            font-size: 12px;
+        }
+        
+        .snake-body {
+            background: #10b981 !important;
+            color: white !important;
+            border: 2px solid #047857;
+        }
+        
+        .word-letter {
+            background: linear-gradient(45deg, #f59e0b, #d97706) !important;
+            color: white !important;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 5px rgba(245, 158, 11, 0.5); }
+            to { box-shadow: 0 0 20px rgba(245, 158, 11, 0.8); }
+        }
+        
+        .floating-letters {
+            position: absolute;
+            font-size: 36px;
+            font-weight: bold;
+            color: rgba(245, 158, 11, 0.7);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .title-area {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            right: 50px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .title {
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            margin: 0;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            margin: 5px 0 0 0;
+        }
+        
+        .bottom-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .features {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 5px 0;
+        }
+        
+        .themes {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-pattern"></div>
+    
+    <div class="title-area">
+        <h1 class="title">🐍 SNAKE WORD PUZZLE</h1>
+        <p class="subtitle">Guide your snake to discover hidden themed words!</p>
+    </div>
+    
+    <div class="game-preview">
+        <div class="cell snake-head">🐍</div>
+        <div class="cell word-letter">C</div>
+        <div class="cell word-letter">A</div>
+        <div class="cell word-letter">T</div>
+        <div class="cell">X</div>
+        <div class="cell">M</div>
+        
+        <div class="cell">R</div>
+        <div class="cell snake-body">🟢</div>
+        <div class="cell word-letter">D</div>
+        <div class="cell word-letter">O</div>
+        <div class="cell word-letter">G</div>
+        <div class="cell">K</div>
+        
+        <div class="cell">N</div>
+        <div class="cell">Q</div>
+        <div class="cell snake-body">🟢</div>
+        <div class="cell">Z</div>
+        <div class="cell">V</div>
+        <div class="cell">B</div>
+    </div>
+    
+    <div class="floating-letters" style="top: 100px; left: 100px;">S</div>
+    <div class="floating-letters" style="top: 150px; right: 100px; animation-delay: 1s;">N</div>
+    <div class="floating-letters" style="bottom: 200px; left: 120px; animation-delay: 2s;">A</div>
+    <div class="floating-letters" style="bottom: 150px; right: 120px; animation-delay: 0.5s;">K</div>
+    <div class="floating-letters" style="top: 300px; left: 50px; animation-delay: 1.5s;">E</div>
+    
+    <div class="bottom-info">
+        <div class="features">🎯 Find 3 themed words • 🏆 Beat your best time • 🌟 Multiple difficulty levels</div>
+        <div class="themes">Animals • Colors • Food • Sports • Nature</div>
+    </div>
+</body>
+</html>

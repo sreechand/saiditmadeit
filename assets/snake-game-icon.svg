@@ -1,0 +1,75 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="iconBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#047857;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="snakeBody" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#34d399;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#10b981;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="letterBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d97706;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="64" cy="64" r="60" fill="url(#iconBg)" stroke="#047857" stroke-width="4"/>
+  
+  <!-- Grid Pattern -->
+  <g opacity="0.2">
+    <rect x="20" y="20" width="16" height="16" fill="white" rx="2"/>
+    <rect x="40" y="20" width="16" height="16" fill="white" rx="2"/>
+    <rect x="60" y="20" width="16" height="16" fill="white" rx="2"/>
+    <rect x="80" y="20" width="16" height="16" fill="white" rx="2"/>
+    
+    <rect x="20" y="40" width="16" height="16" fill="white" rx="2"/>
+    <rect x="40" y="40" width="16" height="16" fill="white" rx="2"/>
+    <rect x="60" y="40" width="16" height="16" fill="white" rx="2"/>
+    <rect x="80" y="40" width="16" height="16" fill="white" rx="2"/>
+    
+    <rect x="20" y="60" width="16" height="16" fill="white" rx="2"/>
+    <rect x="40" y="60" width="16" height="16" fill="white" rx="2"/>
+    <rect x="60" y="60" width="16" height="16" fill="white" rx="2"/>
+    <rect x="80" y="60" width="16" height="16" fill="white" rx="2"/>
+  </g>
+  
+  <!-- Snake -->
+  <!-- Snake head -->
+  <circle cx="28" cy="28" r="12" fill="url(#snakeBody)" stroke="#047857" stroke-width="2"/>
+  <!-- Eyes -->
+  <circle cx="25" cy="25" r="2" fill="white"/>
+  <circle cx="31" cy="25" r="2" fill="white"/>
+  <circle cx="25" cy="25" r="1" fill="black"/>
+  <circle cx="31" cy="25" r="1" fill="black"/>
+  
+  <!-- Snake body segments -->
+  <circle cx="48" cy="28" r="10" fill="#10b981" stroke="#047857" stroke-width="1.5"/>
+  <circle cx="68" cy="28" r="10" fill="#10b981" stroke="#047857" stroke-width="1.5"/>
+  <circle cx="88" cy="48" r="10" fill="#10b981" stroke="#047857" stroke-width="1.5"/>
+  <circle cx="88" cy="68" r="10" fill="#10b981" stroke="#047857" stroke-width="1.5"/>
+  
+  <!-- Letters in cells -->
+  <rect x="72" y="20" width="16" height="16" fill="url(#letterBg)" rx="2"/>
+  <text x="80" y="32" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">C</text>
+  
+  <rect x="92" y="40" width="16" height="16" fill="url(#letterBg)" rx="2"/>
+  <text x="100" y="52" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">A</text>
+  
+  <rect x="92" y="60" width="16" height="16" fill="url(#letterBg)" rx="2"/>
+  <text x="100" y="72" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">T</text>
+  
+  <!-- Sparkle effects -->
+  <g opacity="0.8">
+    <path d="M 45 15 L 47 19 L 51 17 L 47 21 L 45 25 L 43 21 L 39 17 L 43 19 Z" fill="white">
+      <animateTransform attributeName="transform" type="rotate" values="0 45 20; 360 45 20" dur="4s" repeatCount="indefinite"/>
+    </path>
+    
+    <path d="M 100 85 L 102 89 L 106 87 L 102 91 L 100 95 L 98 91 L 94 87 L 98 89 Z" fill="white">
+      <animateTransform attributeName="transform" type="rotate" values="0 100 90; 360 100 90" dur="3s" repeatCount="indefinite"/>
+    </path>
+  </g>
+</svg>

@@ -305,7 +305,7 @@ function placeWordInGrid(
  */
 function createWordFromString(text: string, isTarget: boolean): Word {
   return {
-    id: `word_${text}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    id: `word_${text}_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
     text: text.toUpperCase(),
     positions: [],
     orientation: 'horizontal-lr', // Will be set during placement

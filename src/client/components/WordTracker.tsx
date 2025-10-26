@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Word, CollectedWord, DifficultySettings } from '../../shared/types/game';
 
 interface WordTrackerProps {
@@ -23,7 +23,32 @@ const WordProgress: React.FC<WordProgressProps> = ({
   collectedWord,
   difficulty
 }) => {
+  const [justCompleted, setJustCompleted] = useState(false);
+  const [progressAnimation, setProgressAnimation] = useState('');
   const progressPercentage = (word.collectionProgress / word.text.length) * 100;
+  
+  // Handle completion animation
+  useEffect(() => {
+    if (isCollected && !justCompleted) {
+      setJustCompleted(true);
+      setProgressAnimation('animate-word-complete-glow');
+      
+      const timer = setTimeout(() => {
+        setProgressAnimation('');
+      }, 1000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isCollected, justCompleted]);
+  
+  // Handle progress change animation
+  useEffect(() => {
+    if (word.collectionProgress > 0 && !isCollected) {
+      setProgressAnimation('animate-pulse');
+      const timer = setTimeout(() => setProgressAnimation(''), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [word.collectionProgress, isCollected]);
   
   // Determine what to show based on difficulty
   const getWordDisplay = () => {
@@ -43,57 +68,67 @@ const WordProgress: React.FC<WordProgressProps> = ({
     if (isCollected && collectedWord) {
       return collectedWord.word.text.toUpperCase();
     } else if (word.collectionProgress > 0) {
-      // Show partial progress
+      // Show partial progress with animation
       const collected = word.text.slice(0, word.collectionProgress).toUpperCase();
       const remaining = '_'.repeat(word.text.length - word.collectionProgress);
-      return collected + remaining;
+      return (
+        <span>
+          <span className="text-green-600 font-bold">{collected}</span>
+          <span className="text-gray-400">{remaining}</span>
+        </span>
+      );
     }
     return getWordDisplay();
   };
   
   return (
-    <div className="word-progress bg-white rounded-lg p-3 shadow-sm border">
+    <div className={`word-progress bg-white rounded-lg p-3 shadow-sm border transition-smooth ${progressAnimation}`}>
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          <div className={`w-3 h-3 rounded-full ${
+          <div className={`w-3 h-3 rounded-full transition-all duration-300 ${
             isCollected 
-              ? (collectedWord?.isCorrect ? 'bg-green-500' : 'bg-red-500')
+              ? (collectedWord?.isCorrect ? 'bg-green-500 animate-pulse' : 'bg-red-500')
               : word.collectionProgress > 0 
-                ? 'bg-yellow-500' 
+                ? 'bg-yellow-500 animate-pulse' 
                 : 'bg-gray-300'
           }`} />
-          <span className="text-sm font-medium text-gray-700">
+          <span className="text-sm font-medium text-gray-700 transition-smooth">
             {getCollectedDisplay()}
           </span>
         </div>
         
         {isCollected && (
-          <div className={`text-xs px-2 py-1 rounded ${
+          <div className={`text-xs px-2 py-1 rounded transition-bounce ${
             collectedWord?.isCorrect 
-              ? 'bg-green-100 text-green-800' 
+              ? 'bg-green-100 text-green-800 animate-bounce' 
               : 'bg-red-100 text-red-800'
           }`}>
-            {collectedWord?.isCorrect ? 'Target' : 'Distractor'}
+            {collectedWord?.isCorrect ? 'Target ✓' : 'Distractor ✗'}
           </div>
         )}
       </div>
       
-      {/* Progress bar */}
-      <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+      {/* Enhanced progress bar with animations */}
+      <div className="w-full bg-gray-200 rounded-full h-3 mb-2 overflow-hidden">
         <div 
-          className={`h-2 rounded-full transition-all duration-300 ${
+          className={`h-3 rounded-full transition-all duration-500 ease-out relative ${
             isCollected
-              ? (collectedWord?.isCorrect ? 'bg-green-500' : 'bg-red-500')
-              : 'bg-blue-500'
+              ? (collectedWord?.isCorrect ? 'bg-gradient-to-r from-green-400 to-green-600' : 'bg-gradient-to-r from-red-400 to-red-600')
+              : 'bg-gradient-to-r from-blue-400 to-blue-600'
           }`}
           style={{ width: `${isCollected ? 100 : progressPercentage}%` }}
-        />
+        >
+          {/* Progress bar shine effect */}
+          {word.collectionProgress > 0 && (
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30 animate-pulse" />
+          )}
+        </div>
       </div>
       
-      {/* Progress text */}
-      <div className="text-xs text-gray-600 text-center">
+      {/* Progress text with enhanced styling */}
+      <div className="text-xs text-gray-600 text-center font-medium">
         {isCollected 
-          ? 'Complete' 
+          ? <span className="text-green-600 font-bold">Complete! 🎉</span>
           : `${word.collectionProgress}/${word.text.length} letters`
         }
       </div>

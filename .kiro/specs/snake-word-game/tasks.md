@@ -119,7 +119,7 @@
     - _Requirements: All requirements for robustness_
 
 - [ ] 7. Polish and optimization
-  - [ ] 7.1 Add visual effects and animations
+  - [x] 7.1 Add visual effects and animations
     - Implement word collection animations and particle effects
     - Create smooth snake movement transitions and growth animations
     - Add visual feedback for game state changes and achievements

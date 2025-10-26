@@ -1,1 +1,199 @@
 @import 'tailwindcss';
+
+/* Custom animations for Snake Word Game */
+
+/* Particle effects */
+@keyframes particle-float {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-30px) scale(0.5);
+    opacity: 0;
+  }
+}
+
+@keyframes particle-burst {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2) rotate(180deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Snake movement animations */
+@keyframes snake-slither {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(1px);
+  }
+}
+
+@keyframes snake-grow {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Word collection animations */
+@keyframes word-complete-glow {
+  0% {
+    box-shadow: 0 0 5px rgba(34, 197, 94, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.8), 0 0 30px rgba(34, 197, 94, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(34, 197, 94, 0.5);
+  }
+}
+
+@keyframes letter-collect {
+  0% {
+    transform: scale(1);
+    background-color: rgb(255, 255, 255);
+  }
+  50% {
+    transform: scale(1.1);
+    background-color: rgb(34, 197, 94);
+  }
+  100% {
+    transform: scale(1);
+    background-color: rgb(34, 197, 94);
+  }
+}
+
+@keyframes wrong-letter-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2px);
+  }
+  75% {
+    transform: translateX(2px);
+  }
+}
+
+/* Victory animations */
+@keyframes victory-celebration {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.1) rotate(5deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(-5deg);
+  }
+  75% {
+    transform: scale(1.1) rotate(3deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* Theme-based color schemes */
+.theme-animals {
+  --primary-color: #f59e0b;
+  --secondary-color: #d97706;
+  --accent-color: #92400e;
+}
+
+.theme-colors {
+  --primary-color: #ec4899;
+  --secondary-color: #db2777;
+  --accent-color: #be185d;
+}
+
+.theme-food {
+  --primary-color: #ef4444;
+  --secondary-color: #dc2626;
+  --accent-color: #b91c1c;
+}
+
+.theme-sports {
+  --primary-color: #3b82f6;
+  --secondary-color: #2563eb;
+  --accent-color: #1d4ed8;
+}
+
+.theme-nature {
+  --primary-color: #10b981;
+  --secondary-color: #059669;
+  --accent-color: #047857;
+}
+
+/* Animation utility classes */
+.animate-particle-float {
+  animation: particle-float 0.8s ease-out forwards;
+}
+
+.animate-particle-burst {
+  animation: particle-burst 0.6s ease-out forwards;
+}
+
+.animate-snake-slither {
+  animation: snake-slither 0.5s ease-in-out infinite;
+}
+
+.animate-snake-grow {
+  animation: snake-grow 0.3s ease-out;
+}
+
+.animate-word-complete-glow {
+  animation: word-complete-glow 1s ease-in-out infinite;
+}
+
+.animate-letter-collect {
+  animation: letter-collect 0.4s ease-out;
+}
+
+.animate-wrong-letter-shake {
+  animation: wrong-letter-shake 0.5s ease-in-out;
+}
+
+.animate-victory-celebration {
+  animation: victory-celebration 0.8s ease-in-out infinite;
+}
+
+.animate-confetti-fall {
+  animation: confetti-fall 3s linear infinite;
+}
+
+/* Smooth transitions */
+.transition-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-bounce {
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}

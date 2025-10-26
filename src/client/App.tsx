@@ -5,7 +5,8 @@ import { useSnake } from './hooks/useSnake';
 import { useWordCollection } from './hooks/useWordCollection';
 import { useVictorySystem } from './hooks/useVictorySystem';
 import { useDifficulty } from './hooks/useDifficulty';
-import { GameBoard, Snake, WordTracker, GameControls, VictoryScreen } from './components';
+import { GameBoard, WordTracker, GameControls, VictoryScreen } from './components';
+import { AnimationSystem, useAnimations } from './components/AnimationSystem';
 import { GAME_CONFIG, DifficultySettings, ThemeName } from '../shared/types/game';
 
 export const App = () => {
@@ -13,18 +14,25 @@ export const App = () => {
   
   // Game state hooks
   const { gameState, initializeGame, pauseGame, resumeGame, resetGame } = useGameState();
-  const { changeDirection } = useSnake();
-  const { 
-    showVictoryScreen, 
-    playAgain, 
-    playWithNewTheme, 
-    closeVictoryScreen 
+  const { moveSnake } = useSnake();
+  const {
+    showVictoryScreen,
+    playAgain,
+    playWithNewTheme,
+    closeVictoryScreen
   } = useVictorySystem();
   const { 
     changeDifficulty, 
     canChangeDifficulty
   } = useDifficulty();
   useWordCollection();
+  
+  // Animation system
+  const {
+    animationEvents,
+    clearProcessedEvents,
+    triggerVictory
+  } = useAnimations();
   
   // Handle game initialization
   const handleStartGame = () => {
@@ -55,11 +63,8 @@ export const App = () => {
   
   // Game control handlers
   const handleMove = (direction: 'up' | 'down' | 'left' | 'right') => {
-    console.log('handleMove called:', direction, 'gameStatus:', gameState.gameStatus);
     if (gameState.gameStatus === 'playing') {
-      console.log('Calling changeDirection:', direction);
-      // Use the snake hook's changeDirection method
-      changeDirection(direction);
+      moveSnake(direction);
     }
   };
   
@@ -81,66 +86,46 @@ export const App = () => {
 
   // Global keyboard handler
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    console.log('Key pressed:', event.key, 'gameStarted:', gameStarted, 'gameStatus:', gameState.gameStatus);
-    
     if (!gameStarted || gameState.gameStatus !== 'playing') {
-      console.log('Blocked - gameStarted:', gameStarted, 'gameStatus:', gameState.gameStatus);
       return;
     }
-    
-    // Prevent default behavior for game keys
-    const gameKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd', ' ', 'r'];
-    if (gameKeys.includes(event.key) || gameKeys.includes(event.code)) {
-      event.preventDefault();
-    }
-    
+
     switch (event.key) {
-      // Arrow keys
       case 'ArrowUp':
-        console.log('Moving up');
+      case 'w':
+      case 'W':
+        event.preventDefault();
         handleMove('up');
         break;
       case 'ArrowDown':
-        console.log('Moving down');
+      case 's':
+      case 'S':
+        event.preventDefault();
         handleMove('down');
         break;
       case 'ArrowLeft':
-        console.log('Moving left');
+      case 'a':
+      case 'A':
+        event.preventDefault();
         handleMove('left');
         break;
       case 'ArrowRight':
-        console.log('Moving right');
-        handleMove('right');
-        break;
-      
-      // WASD keys
-      case 'w':
-      case 'W':
-        console.log('Moving up (W)');
-        handleMove('up');
-        break;
-      case 's':
-      case 'S':
-        console.log('Moving down (S)');
-        handleMove('down');
-        break;
-      case 'a':
-      case 'A':
-        console.log('Moving left (A)');
-        handleMove('left');
-        break;
       case 'd':
       case 'D':
-        console.log('Moving right (D)');
+        event.preventDefault();
         handleMove('right');
         break;
-      
-      // Game control keys
       case ' ':
-        gameState.gameStatus === 'paused' ? resumeGame() : pauseGame();
+        event.preventDefault();
+        if (gameState.gameStatus === 'paused') {
+          resumeGame();
+        } else if (gameState.gameStatus === 'playing') {
+          pauseGame();
+        }
         break;
       case 'r':
       case 'R':
+        event.preventDefault();
         resetGame();
         break;
     }
@@ -153,6 +138,19 @@ export const App = () => {
       return () => window.removeEventListener('keydown', handleKeyDown);
     }
   }, [gameStarted, handleKeyDown]);
+
+  // Trigger animations based on game state changes
+  useEffect(() => {
+    // Trigger victory animation when game is won
+    if (gameState.gameStatus === 'won' && gameState.currentTheme) {
+      triggerVictory(gameState.currentTheme.category);
+    }
+  }, [gameState.gameStatus, gameState.currentTheme, triggerVictory]);
+
+  // Handle animation event processing
+  const handleAnimationEventProcessed = useCallback((eventIndex: number) => {
+    clearProcessedEvents([eventIndex]);
+  }, [clearProcessedEvents]);
   
   // Show splash screen if game hasn't started
   if (!gameStarted) {
@@ -219,12 +217,17 @@ export const App = () => {
                 grid={gameState.grid}
                 snake={gameState.snake}
                 onCellClick={(x, y) => console.log('Cell clicked:', x, y)}
+                theme={gameState.currentTheme?.category}
+                isAnimating={gameState.gameStatus === 'playing' && !gameState.isSnakeStopped}
+                snakeDirection={gameState.snakeDirection}
               />
-              <Snake
-                snake={gameState.snake}
-                direction={gameState.snakeDirection}
-                isMoving={gameState.gameStatus === 'playing' && !gameState.isSnakeStopped}
+
+              {/* Animation System Overlay */}
+              <AnimationSystem
                 gridSize={GAME_CONFIG.GRID_SIZE}
+                cellSize={100 / GAME_CONFIG.GRID_SIZE}
+                events={animationEvents}
+                onEventProcessed={handleAnimationEventProcessed}
                 className="absolute inset-0"
               />
             </div>
